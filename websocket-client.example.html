@@ -9,61 +9,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Dennis MUD</title>
+    <title>Zschokkei (Dennis MUD)</title>
     <meta charset="UTF-8">
-    <style>
-        html {
-            height: 95%;
-        }
-        body {
-            background-color: #808080;
-            height: 95%;
-            font-family: monospace;
-            font-size: 12pt;
-        }
-        a:link, a:visited {
-            color: #0A0A60;
-        }
-        a:hover, a:link:hover, a:visited:hover {
-            color: #802020;
-        }
-        #chat_box {
-            text-align: left;
-            margin: auto;
-            margin-top: 10px;
-            margin-bottom: 15px;
-            padding: 5px;
-            background-color: #A0A0A0;
-            height: 70%;
-            width: 95%;
-            border: 1px solid #803030;
-            overflow: auto;
-        }
-        #container {
-            height: 100%;
-            max-width: 1200px;
-            text-align: center;
-            margin: auto;
-        }
-        #input {
-            background-color: #A0A0A0;
-            border: 1px solid #803030;
-            width: 95%;
-            height: auto;
-            font-family: monospace;
-            font-size: 28pt;
-        }
-        form.console {
-            font-family: monospace;
-            font-size: 28pt;
-            height: auto;
-        }
-    </style>
+    <link rel="stylesheet" media="screen" href="style.css"/>
 </head>
 <body>
     <div id="container">
         <div id="supported"></div>
-        <div id="chat_box">Welcome to the Dennis MUD public test instance, running <a title="GitHub" href="https://github.com/seisatsu/Dennis">Dennis</a>.<br/>
+        <div id="chat_box">Welcome to public test instance of Zschokkei (DennisMUD), running <a title="GitHub" href="https://github.com/zbylyrcxr/DennisMUD">Dennis</a>.<br/>
             This is experimental software. If something goes wrong, try refreshing the page.<br/>
             <br/>
             In this game, you use in-game commands to create the content. All content is user-created.<br/>
@@ -83,15 +36,16 @@
             Have fun!<br/>
             <br/>
         </div>
+        <hr>
         <div style="text-align: center;"><form class="console">
             <input id="input" autofocus="autofocus"/>
         </form></div>
         <br/>
     </div>
     <script type="text/javascript">
-        var host = "play.dennismud.xyz";
-        var port = 37381;
-        var secure = true;
+        var host = "testingmud.ddns.net";
+        var port = 37380;
+        var secure = false;
 
         if(window.WebSocket){
             window.addEventListener("load", function() {
