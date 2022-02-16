@@ -103,6 +103,8 @@ def COMMAND(console, args):
                         if thisitem["id"] in thiscontainer["container"]["inventory"]:
                             console.msg("{0}: This item is already in this container.".format(NAME))
                         else:
+                            # Putting a cursed item into a container makes the container cursed too.
+                            if thisitem["cursed"]["enabled"]: thiscontainer["cursed"]["enabled"]=True
                             thiscontainer["container"]["inventory"].append(thisitem["id"])
                             console.shell.broadcast_room(console, "{0} has put {1} into {2}.".format(
                                 console.user["nick"], COMMON.format_item(NAME, thisitem["name"]),COMMON.format_item(NAME, thiscontainer["name"])))

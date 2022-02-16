@@ -46,9 +46,9 @@ def COMMAND(console, args):
     if not COMMON.check(NAME, console, args, argmin=1):
         return False
 
-    elif args[0]=="force":
-        console.msg("Not implemented yet.")
-        return False
+    #elif args[0]=="force":
+    #    console.msg("Not implemented yet.")
+    #    return False
 
     elif args[0]=="reveal":
         SCOST=5
@@ -89,7 +89,7 @@ def COMMAND(console, args):
         target=' '.join(args[1:])
         if not COMMON.check(NAME, console, args, argmin=2, spiritcost=SCOST, spiritenabled=CONFIG["spiritenabled"]):
             return False
-        
+                        
         # Lookup the current room and perform room checks.
         thisroom = COMMON.check_room(NAME, console)
         if not thisroom:
@@ -148,6 +148,8 @@ def COMMAND(console, args):
                     else:
                         console.msg("{0} seems to be empty.".format(item["name"].capitalize()))
                 found_something = True
+                msg = "{0} performs a ritual of knowledge.".format(console.user["nick"])
+                console.shell.broadcast_room(console, msg)
                 return True
 
         # Maybe it's an item in our inventory.
@@ -204,6 +206,8 @@ def COMMAND(console, args):
                     console.msg("{0} seems to be empty.".format(item["name"].capitalize()))
 
                 found_something = True
+                msg = "{0} performs a ritual of knowledge.".format(console.user["nick"])
+                console.shell.broadcast_room(console, msg)
                 return True
         # We didn't find anything by that name. See if we found partial matches.
         if not found_something:
@@ -213,7 +217,7 @@ def COMMAND(console, args):
 
             # We got exactly one partial match. Assume that one.
             if len(partials) == 1:
-                console.msg("Assuming {0}.".format(partials[0]))
+                #console.msg("Assuming {0}.".format(partials[0]))
                 console.user["spirit"]+=SCOST
                 partials[0]="identify "+partials[0]
                 return COMMAND(console, partials[0].split(' '))
