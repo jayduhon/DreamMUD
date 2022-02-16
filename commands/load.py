@@ -74,7 +74,7 @@ def COMMAND(console, args):
             continue
 
         # Check for name or id match. Also check if the user prepended "the ". Figure out how to put into it.
-        if thiscontainername in [thiscontainer["name"].lower(), "the " + thiscontainer["name"].lower()] or str(thiscontainer["id"]) == thiscontainername:
+        if thiscontainername in [thiscontainer["name"].lower(), thiscontainer["name"], "the " + thiscontainer["name"] , "the " + thiscontainer["name"].lower()] or str(thiscontainer["id"]) == thiscontainername:
             # Found the container, but do they have the item too?
             for itemid in console.user["inventory"]:
                 thisitem = COMMON.check_item(NAME, console, itemid, reason=False)
@@ -83,7 +83,7 @@ def COMMAND(console, args):
                     console.log.error("Item referenced in container does not exist: {room} :: {item}", room=console.user["room"], item=itemid)
                     console.msg("{0}: ERROR: Item referenced in this container does not exist: {1}".format(NAME, itemid))
                     continue
-                if thisitemname in [thisitem["name"].lower(), "the " + thisitem["name"].lower()] or str(thisitem["id"]) == thisitemname:
+                if thisitemname in [thisitem["name"], "the " + thisitem["name"], thisitem["name"].lower(), "the " + thisitem["name"].lower()] or str(thisitem["id"]) == thisitemname:
                     # We found both! Time to put that item into the container.
                     # Lookup the target item and perform item checks.
                     if thisitem["id"] == thiscontainer["id"]:
@@ -115,13 +115,21 @@ def COMMAND(console, args):
                     # Update the user document.
                     console.database.upsert_user(console.user)
 
-            # Finished.
-            return True
+                    # Finished.
+                    return True
 
     # We didn't find the requested item. Check for a partial match.
-    partial = COMMON.match_partial(NAME, console, target, "item", room=False, inventory=True)
-    if partial:
-        return COMMAND(console, partial)
+    partial_item = COMMON.match_partial(NAME, console, thisitemname.lower(), "item", room=False, inventory=True)
+    partial_chest = COMMON.match_partial(NAME, console, thiscontainername.lower(), "item", room=False, inventory=True)
+    if partial_item and not partial_chest:
+        return COMMAND(console, partial_item+["into"]+thiscontainername.split())
+    elif not partial_item and partial_chest:
+        return COMMAND(console, thisitemname.split()+["into"]+partial_chest)
+    elif partial_item and partial_chest:
+        return COMMAND(console, partial_item+["into"]+partial_chest)
+    else:
+        console.msg("Couldn't find them.")
+        return False
 
     # Maybe the user accidentally typed "put into item <item>".
     if args[0].lower() == "item":

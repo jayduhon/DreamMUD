@@ -104,15 +104,24 @@ def COMMAND(console, args):
 
                     # Update the user document.
                     console.database.upsert_user(console.user)
+                    # Finished.
+                    return True
                 else:
                     console.msg("Couldn't find {0} in the {1}.".format(thisitemname,thiscontainername))
-            # Finished.
-            return True
+                    return False
 
     # We didn't find the requested item. Check for a partial match.
-    partial = COMMON.match_partial(NAME, console, target, "item", room=False, inventory=True)
-    if partial:
-        return COMMAND(console, partial)
+    #partial_item = COMMON.match_partial(NAME, console, thisitemname.lower(), "item", room=False, container=thiscontainer)
+    partial_chest = COMMON.match_partial(NAME, console, thiscontainername.lower(), "item", room=False, inventory=True)
+    #if partial_item and not partial_chest:
+    #    return COMMAND(console, partial_item+["from"]+thiscontainername.split())
+    if partial_chest:
+        return COMMAND(console, thisitemname.split()+["from"]+partial_chest)
+    #elif partial_item and partial_chest:
+    #    return COMMAND(console, partial_item+["from"]+partial_chest)
+    else:
+        console.msg("Couldn't find them.")
+        return False
 
     # Maybe the user accidentally typed "put into item <item>".
     if args[0].lower() == "item":
