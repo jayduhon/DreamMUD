@@ -25,6 +25,7 @@
     "colors": {
       "enabled": false
     },
+    "spirit": 0,
     "lang": "common"
   },
   "items": {

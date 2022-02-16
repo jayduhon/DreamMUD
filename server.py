@@ -66,7 +66,6 @@ class Router:
 
     :ivar users: Dictionary of connected users and their consoles, as well as the protocols they are connected by.
     :ivar shell: The shell instance, which handles commands and help.
-    :ivar single_user: Whether we are running in single-user mode. Hard-coded here to False.
     :ivar telnet_factory: The active Autobahn telnet server factory.
     :ivar websocket_factory: The active Autobahn websocket server factory.
     :ivar shutting_down: Whether the server is currently counting down to shutdown.
