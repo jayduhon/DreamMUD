@@ -80,10 +80,18 @@ def COMMAND(console, args):
         if "into" in thisitem["name"] or "from" in thisitem["name"]:
             console.msg("Containers can't have the word INTO or FROM in their name. Please rename the item before making it a container.")
             return False
-        thisitem["container"]["enabled"] = True
-        thisitem["container"]["inventory"] = []
+        if thisitem["container"]["enabled"]:
+            if(len(thisitem["container"]["inventory"]))>0:
+                console.msg("Can't make it a non-container, please empty the item first.")
+                return False
+            else:
+                thisitem["container"]["enabled"] = False
+                thisitem["container"]["inventory"] = []
+        else:
+            thisitem["container"]["enabled"] = True
+            thisitem["container"]["inventory"] = []
     console.database.upsert_item(thisitem)
 
     # Finished.
-    console.msg("{0}: Done. {1} is now a {2} item.".format(NAME,args[0].capitalize(),args[1]))
+    console.msg("{0}: Done.".format(NAME))
     return True

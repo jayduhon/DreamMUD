@@ -77,10 +77,6 @@ def COMMAND(console, args):
         if thiscontainername in [thiscontainer["name"].lower(), "the " + thiscontainer["name"].lower()] or str(thiscontainer["id"]) == thiscontainername:
             # Found the container, but do they have the item too?
             for itemid in console.user["inventory"]:
-                # Lookup the target item and perform item checks.
-                if itemid==containerid:
-                    console.msg("Don't do that.")
-                    return False
                 thisitem = COMMON.check_item(NAME, console, itemid, reason=False)
                 # Lookup the current container.
                 if not thisitem:
@@ -89,6 +85,10 @@ def COMMAND(console, args):
                     continue
                 if thisitemname in [thisitem["name"].lower(), "the " + thisitem["name"].lower()] or str(thisitem["id"]) == thisitemname:
                     # We found both! Time to put that item into the container.
+                    # Lookup the target item and perform item checks.
+                    if thisitem["id"] == thiscontainer["id"]:
+                        console.msg("Don't do that.")
+                        return False
                     # Only non-owners lose duplified items when put away.
                     if not thisitem["duplified"] or not console.user["name"] in thisitem["owners"]:
                         console.user["inventory"].remove(thisitem["id"])

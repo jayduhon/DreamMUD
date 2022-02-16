@@ -200,10 +200,11 @@ def COMMAND(console, args):
                 #    console.msg(item["desc"])
 
                 # List content if it's a container
-                if len(item["container"]["inventory"])>0 and item["container"]["enabled"]:
-                    console.msg("{0} seems to contain some items.".format(item["name"].capitalize()))
-                else:
-                    console.msg("{0} seems to be empty.".format(item["name"].capitalize()))
+                if item["container"]["enabled"]:
+                    if len(item["container"]["inventory"])>0:
+                        console.msg("{0} seems to contain some items.".format(item["name"].capitalize()))
+                    else:
+                        console.msg("{0} seems to be empty.".format(item["name"].capitalize()))
 
                 found_something = True
                 msg = "{0} performs a ritual of knowledge.".format(console.user["nick"])
