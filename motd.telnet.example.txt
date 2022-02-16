@@ -1,11 +1,11 @@
-Welcome to Dennis MUD.
+Welcome to Zschokkei (DennisMUD).
 
 In this game, you use in-game commands to create the content. All content is user-created.
 
 To get started, type "register username password", substituting the username and password you want to use.
 Then type "login username password" with the username and password you chose to log in.
 
-Important commands for the casual player include "look", "go", "say", "action", "chat", and "use".
+Important commands for the casual player include "look", "go", "say", "action", and "use".
 Read the help pages for the other commands listed by "help" to get started making content.
 
 Using the "help" command by itself will list command categories.
@@ -15,5 +15,3 @@ You can also use help on a particular command to see a manual entry for that com
 For example, "help make item" will show the manual entry for the "make item" command.
 
 To end your session, use "quit".
-
-Have fun!
