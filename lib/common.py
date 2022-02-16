@@ -819,7 +819,7 @@ def broadcast_action(NAME, console, action):
     return True
 
 
-def match_partial(NAME, console, target, objtype, room=True, inventory=True, message=True, equipment=False):
+def match_partial(NAME, console, target, objtype, room=True, inventory=True, message=True, equipment=False, container=False):
     """Find exits, items, or users matching a partial string target in the current room or user's inventory.
 
     :param NAME: The NAME field from the command module.
@@ -828,7 +828,8 @@ def match_partial(NAME, console, target, objtype, room=True, inventory=True, mes
     :param objtype: One of "exit", "item", "user".
     :param room: Whether to search the current room when objtype is "item". Defaults to True.
     :param inventory: Whether to search the user's inventory when objtype is "item". Defaults to True.
-    :param equipment: Whether to search the user's inventory when objtype is "item". Defaults to False.
+    :param equipment: Whether to search the user's equipment when objtype is "item". Defaults to False.
+    :param container: Whether to search the container's inventory when objtype is "item". Defaults to False.
     :param message: Whether to give a standard failure message if no partials were found. Defaults to True.
 
     :return: Matching name split into segments if one match found, None if several or no matches found.
