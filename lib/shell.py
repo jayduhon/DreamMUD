@@ -411,9 +411,10 @@ class Shell:
                     if self.router.users[u]["console"].user["spirit"]<100:
                         cursed = False
                         # Iterate through inventory to see if they are cursed.
-                        for it in self.router.users[u]["console"].user["inventory"]:
+                        for it in self.router.users[u]["console"].user["inventory"]+self.router.users[u]["console"].user["equipment"]:
                             it2 = self.router.users[u]["console"].database.item_by_id(it)
                             if it2["cursed"]["enabled"]: cursed = True
+                        # You can hide cursed items in a container for now.
                         if cursed == False:
                             self.router.users[u]["console"].user["spirit"]+=CONFIG["spiritrate"]
                             self.router.users[u]["console"].msg("You regain some spirit.")

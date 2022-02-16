@@ -819,7 +819,7 @@ def broadcast_action(NAME, console, action):
     return True
 
 
-def match_partial(NAME, console, target, objtype, room=True, inventory=True, message=True):
+def match_partial(NAME, console, target, objtype, room=True, inventory=True, message=True, equipment=False):
     """Find exits, items, or users matching a partial string target in the current room or user's inventory.
 
     :param NAME: The NAME field from the command module.
@@ -828,6 +828,7 @@ def match_partial(NAME, console, target, objtype, room=True, inventory=True, mes
     :param objtype: One of "exit", "item", "user".
     :param room: Whether to search the current room when objtype is "item". Defaults to True.
     :param inventory: Whether to search the user's inventory when objtype is "item". Defaults to True.
+    :param equipment: Whether to search the user's inventory when objtype is "item". Defaults to False.
     :param message: Whether to give a standard failure message if no partials were found. Defaults to True.
 
     :return: Matching name split into segments if one match found, None if several or no matches found.
@@ -897,6 +898,22 @@ def match_partial(NAME, console, target, objtype, room=True, inventory=True, mes
                 # Check for partial matches.
                 if target in thisitem["name"].lower() or target.replace("the ", "", 1) in thisitem["name"].lower():
                     partials.append(thisitem["name"].lower())
+        
+        if equipment:
+            for itemid in console.user["equipment"]:
+                # Lookup the target item and perform item checks. We have to do this to get the item names.
+                thisitem = COMMON.check_item(NAME, console, itemid, reason=False)
+                if not thisitem:
+                    console.log.error("Item referenced in room does not exist: {room} :: {item}",
+                                      room=console.user["room"],
+                                      item=itemid)
+                    console.msg("{0}: ERROR: Item referenced in this room does not exist: {1}".format(NAME, itemid))
+                    continue
+
+                # Check for partial matches.
+                if target in thisitem["name"].lower() or target.replace("the ", "", 1) in thisitem["name"].lower():
+                    partials.append(thisitem["name"].lower())
+
 
     # Search for a target user.
     elif objtype == "user":
