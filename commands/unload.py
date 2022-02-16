@@ -99,26 +99,22 @@ def COMMAND(console, args):
                             console.shell.broadcast_room(console, "{0} has took {1} from {2}.".format(
                                 console.user["nick"], COMMON.format_item(NAME, thisitem["name"]),COMMON.format_item(NAME, thiscontainer["name"])))
 
-                        # Update the room document.
-                        console.database.upsert_item(thiscontainer)
+                    # Update the room document.
+                    console.database.upsert_item(thiscontainer)
 
                     # Update the user document.
                     console.database.upsert_user(console.user)
-                    # Finished.
                     return True
                 else:
                     console.msg("Couldn't find {0} in the {1}.".format(thisitemname,thiscontainername))
-                    return False
+                    # Finished.
+                    return True
 
     # We didn't find the requested item. Check for a partial match.
-    #partial_item = COMMON.match_partial(NAME, console, thisitemname.lower(), "item", room=False, container=thiscontainer)
+    #partial_item = COMMON.match_partial(NAME, console, thisitemname.lower(), "item", room=False, inventory=True)
     partial_chest = COMMON.match_partial(NAME, console, thiscontainername.lower(), "item", room=False, inventory=True)
-    #if partial_item and not partial_chest:
-    #    return COMMAND(console, partial_item+["from"]+thiscontainername.split())
     if partial_chest:
         return COMMAND(console, thisitemname.split()+["from"]+partial_chest)
-    #elif partial_item and partial_chest:
-    #    return COMMAND(console, partial_item+["from"]+partial_chest)
     else:
         console.msg("Couldn't find them.")
         return False
