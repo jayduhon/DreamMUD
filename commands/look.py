@@ -125,7 +125,7 @@ def COMMAND(console, args):
             return False
 
         # Looking at ourselves. Show user nickname real name, and description.
-        if target == "self":
+        if target in ["self","me","myself"]:
             found_something=True
             console.msg("{0} ({1})".format(console.user["nick"], console.user["name"]))
 
@@ -137,35 +137,19 @@ def COMMAND(console, args):
             if console.user["spirit"] and not console.user["wizard"]: 
                 console.msg("Your current spirit seems to be at {0}%.".format(str(console.user["spirit"])))
 
+            # Holding stuff
+            if len(console.user["equipment"])>0:
+                #Currently only 1 item is supported
+                hitem = console.database.item_by_id(console.user["equipment"][0])
+                console.msg("\nYou are holding {0}.".format(COMMON.format_item(NAME, hitem["name"])))
+                    
+            
             # If we are sitting or laying down, format a message saying so after the description.
-            if console.user["pronouns"] == "female":
-                if console["posture"] and console["posture_item"]:
-                    console.msg("\nShe is {0} on {1}.".format(console["posture"],
-                                                              COMMON.format_item(NAME, console["posture_item"])))
-                elif console["posture"]:
-                    console.msg("\nShe is {0}.".format(console["posture"]))
-                return True
-            elif console.user["pronouns"] == "male":
-                if console["posture"] and console["posture_item"]:
-                    console.msg("\nHe is {0} on {1}.".format(console["posture"],
-                                                             COMMON.format_item(NAME, console["posture_item"])))
-                elif console["posture"]:
-                    console.msg("\nHe is {0}.".format(console["posture"]))
-                return True
-            elif console.user["pronouns"] == "neutral":
-                if console["posture"] and console["posture_item"]:
-                    console.msg("\nThey are {0} on {1}.".format(console["posture"],
-                                                                COMMON.format_item(NAME, console["posture_item"])))
-                elif console["posture"]:
-                    console.msg("\nThey are {0}.".format(console["posture"]))
-                return True
-            else:
-                if console["posture"] and console["posture_item"]:
-                    console.msg("\n{0} is {1} on {2}.".format(console.user["pronouns"].capitalize(),console["posture"],
-                                                                COMMON.format_item(NAME, console["posture_item"])))
-                elif console["posture"]:
-                    console.msg("\n{0} is {1}.".format(console.user["pronouns"].capitalize(),console["posture"]))
-                return True
+            if console["posture"] and console["posture_item"]:
+                console.msg("\nYou are {0} on {1}.".format(console["posture"],COMMON.format_item(NAME, console["posture_item"])))
+            elif console["posture"]:
+                console.msg("\nYou are {0}.".format(console["posture"]))
+            return True
             
         # It wasn't us, so maybe it's an item in the room.
         for itemid in thisroom["items"]:
@@ -271,7 +255,7 @@ def COMMAND(console, args):
                         citem=console.database.item_by_id(item["container"]["inventory"][c])
                         citemlist.append(citem["name"])
                     if len(citemlist)>0:
-                        console.msg("Contains the following items: {0}".format(', '.join(citemlist)))
+                        console.msg("Contains the following items: {0}.".format(', '.join(citemlist)))
                     else:
                         console.msg("{0} seems to be empty.".format(item["name"].capitalize()))
 
@@ -304,7 +288,7 @@ def COMMAND(console, args):
                                                      or not thisroom["exits"][ex]["key_hidden"]):
                     item = console.database.item_by_id(thisroom["exits"][ex]["key"])
                     if console.user["builder"]["enabled"]: console.msg("Unlocked with: {0} ({1})".format(item["name"], item["id"]))
-                    else: console.msg("Unlocked with: {0}".format(item["name"]))
+                    else: console.msg("Unlocked with: {0}.".format(item["name"]))
                 found_something = True
                 break
 
@@ -326,24 +310,46 @@ def COMMAND(console, args):
             # If they are sitting or laying down, format a message saying so after the description.
             userconsole = console.shell.console_by_username(user["name"])
             if user["pronouns"] == "female":
+                
+                # Holding stuff
+                if len(user["equipment"])>0:
+                    #Currently only 1 item is supported
+                    hitem = console.database.item_by_id(user["equipment"][0])
+                    console.msg("\nShe is holding {0}.".format(COMMON.format_item(NAME, hitem["name"])))   
+                
                 if userconsole["posture"] and userconsole["posture_item"]:
                     console.msg("\nShe is {0} on {1}.".format(userconsole["posture"],
                                                               COMMON.format_item(NAME, userconsole["posture_item"])))
                 elif userconsole["posture"]:
                     console.msg("\nShe is {0}.".format(userconsole["posture"]))
             elif user["pronouns"] == "male":
+                if len(user["equipment"])>0:
+                    #Currently only 1 item is supported
+                    hitem = console.database.item_by_id(user["equipment"][0])
+                    console.msg("\nHe is holding {0}.".format(COMMON.format_item(NAME, hitem["name"])))
+                
                 if userconsole["posture"] and userconsole["posture_item"]:
                     console.msg("\nHe is {0} on {1}.".format(userconsole["posture"],
                                                              COMMON.format_item(NAME, userconsole["posture_item"])))
                 elif userconsole["posture"]:
                     console.msg("\nHe is {0}.".format(userconsole["posture"]))
             elif user["pronouns"] == "neutral":
+                if len(user["equipment"])>0:
+                    #Currently only 1 item is supported
+                    hitem = console.database.item_by_id(user["equipment"][0])
+                    console.msg("\nThey are holding {0}.".format(COMMON.format_item(NAME, hitem["name"])))
+                
                 if userconsole["posture"] and userconsole["posture_item"]:
                     console.msg("\nThey are {0} on {1}.".format(userconsole["posture"],
                                                              COMMON.format_item(NAME, userconsole["posture_item"])))
                 elif userconsole["posture"]:
                     console.msg("\nThey are {0}.".format(userconsole["posture"]))
             else:
+                if len(user["equipment"])>0:
+                    #Currently only 1 item is supported
+                    hitem = console.database.item_by_id(user["equipment"][0])
+                    console.msg("\n{0} is holding {1}.".format(user["pronouns"].capitalize(),COMMON.format_item(NAME, hitem["name"])))
+                
                 if userconsole["posture"] and userconsole["posture_item"]:
                     console.msg("\n{0} is {1} on {2}.".format(user["pronouns"].capitalize(),userconsole["posture"],
                                                                 COMMON.format_item(NAME, userconsole["posture_item"])))
@@ -355,9 +361,9 @@ def COMMAND(console, args):
             # Maybe it's the nickname of a user.
             # Record partial matches.
             for username in thisroom["users"]:
-                usertemp = console.database.user_by_nick(username)
+                usertemp = console.database.user_by_name(username)
                 if usertemp:
-                    if target in usertemp["nick"]:
+                    if target in usertemp["nick"] or target.capitalize() in usertemp["nick"]:
                         partials.append(usertemp["nick"])
 
             # Look for an exact nickname match.
@@ -372,24 +378,48 @@ def COMMAND(console, args):
                 # If they are sitting or laying down, format a message saying so after the description.
                 userconsole = console.shell.console_by_username(user["name"])
                 if user["pronouns"] == "female":
+                    # Holding stuff
+                    if len(user["equipment"])>0:
+                        #Currently only 1 item is supported
+                        hitem = console.database.item_by_id(user["equipment"][0])
+                        console.msg("\nShe is holding {0}.".format(COMMON.format_item(NAME, hitem["name"])))
+                    
                     if userconsole["posture"] and userconsole["posture_item"]:
                         console.msg("\nShe is {0} on {1}.".format(userconsole["posture"],
                                                                   COMMON.format_item(NAME, userconsole["posture_item"])))
                     elif userconsole["posture"]:
                         console.msg("\nShe is {0}.".format(userconsole["posture"]))
                 elif user["pronouns"] == "male":
+                    # Holding stuff
+                    if len(user["equipment"])>0:
+                        #Currently only 1 item is supported
+                        hitem = console.database.item_by_id(user["equipment"][0])
+                        console.msg("\nHe is holding {0}.".format(COMMON.format_item(NAME, hitem["name"])))
+                        
                     if userconsole["posture"] and userconsole["posture_item"]:
                         console.msg("\nHe is {0} on {1}.".format(userconsole["posture"],
                                                                  COMMON.format_item(NAME, userconsole["posture_item"])))
                     elif userconsole["posture"]:
                         console.msg("\nHe is {0}.".format(userconsole["posture"]))
                 elif user["pronouns"] == "neutral":
+                    # Holding stuff
+                    if len(user["equipment"])>0:
+                        #Currently only 1 item is supported
+                        hitem = console.database.item_by_id(user["equipment"][0])
+                        console.msg("\nThey are holding {0}.".format(COMMON.format_item(NAME, hitem["name"])))
+                    
                     if userconsole["posture"] and userconsole["posture_item"]:
                         console.msg("\nThey are {0} on {1}.".format(userconsole["posture"],
                                                                  COMMON.format_item(NAME, userconsole["posture_item"])))
                     elif userconsole["posture"]:
                         console.msg("\nThey are {0}.".format(userconsole["posture"]))
                 else:
+                    # Holding stuff
+                    if len(user["equipment"])>0:
+                        #Currently only 1 item is supported
+                        hitem = console.database.item_by_id(user["equipment"][0])
+                        console.msg("\n{0} is holding {1}.".format(user["pronouns"].capitalize(),COMMON.format_item(NAME, hitem["name"])))
+                    
                     if userconsole["posture"] and userconsole["posture_item"]:
                         console.msg("\n{0} is {1} on {2}.".format(user["pronouns"].capitalize(),userconsole["posture"],
                                                                     COMMON.format_item(NAME, userconsole["posture_item"])))
@@ -400,6 +430,7 @@ def COMMAND(console, args):
         # We didn't find anything by that name. See if we found partial matches.
         if not found_something:
             # Eliminate duplicate matches.
+
             if partials:
                 partials = list(dict.fromkeys(partials))
 

@@ -37,10 +37,15 @@ def COMMAND(console, args):
     if not COMMON.check(NAME, console, args, argc=0):
         return False
 
+        # Holding items
+    if console.user["equipment"]:
+        hitem = console.database.item_by_id(console.user["equipment"][0])
+        console.msg("You are holding {0}.".format(COMMON.format_item(NAME, hitem["name"])))
+
     # Check if our inventory is empty.
     if not console.user["inventory"]:
         console.msg("{0}: Your inventory is empty.".format(NAME))
-
+       
     # Enumerate our inventory.
     itemcount = 0
     for itemid in sorted(console.user["inventory"]):
