@@ -74,7 +74,7 @@ def COMMAND(console, args):
             return True
 
     # We didn't find the requested item. Check for a partial match.
-    partial = COMMON.match_partial(NAME, console, target, "item", room=False)
+    partial = COMMON.match_partial(NAME, console, target, "item", room=False, equipment=True)
     if partial:
         return COMMAND(console, partial)
 

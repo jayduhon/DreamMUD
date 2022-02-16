@@ -207,7 +207,7 @@ def COMMAND(console, args):
                 break
 
         # Maybe it's an item in our inventory.
-        for itemid in console.user["inventory"]:
+        for itemid in console.user["inventory"]+console.user["equipment"]:
             item = console.database.item_by_id(itemid)
             # A reference was found to a nonexistent item. Report this and continue searching.
             if not item:
