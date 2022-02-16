@@ -70,10 +70,12 @@ def COMMAND(console, args):
             # Check for randomized chance
             if dit["chance"] and dit["hidden"]==True:
                 if random.randint(1,dit["chance"])==1: 
+                    dit["truehide"]=False
                     dit["hidden"]=False
                 # A small chance to reveal truly hidden stuff.
                 if random.randint(1,4)==1:
                     dit["truehide"]=False
+                    dit["hidden"]=False
 
         msg = "{0} tries to reveal hidden things with a ritual.".format(console.user["nick"])
         console.shell.broadcast_room(console, msg)
