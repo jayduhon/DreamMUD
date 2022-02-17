@@ -25,6 +25,7 @@
 # IN THE SOFTWARE.
 # **********
 from lib.color import *
+from lib.litnumbers import *
 
 NAME = "look"
 CATEGORIES = ["exploration"]
@@ -67,7 +68,10 @@ def COMMAND(console, args):
         userlist = []
         for user in thisroom["users"]:
             userlist.append(console.database.user_by_name(user)["nick"])
-        console.msg(mcolor(CYELLO,"\nOccupants: {0}".format(", ".join(userlist)),console.user["colors"]["enabled"]))
+        if len(userlist)>1:
+            console.msg(mcolor(CYELLO,"\n{0} are here.".format(" and ".join(userlist)),console.user["colors"]["enabled"]))
+        else:
+            console.msg(mcolor(CYELLO,"\n{0} is here.".format(" ".join(userlist)),console.user["colors"]["enabled"]))
 
         # Build and show the item list.
         itemlist = []
@@ -85,18 +89,22 @@ def COMMAND(console, args):
                                   item=itemid)
                 console.msg("{0}: ERROR: Item referenced in this room does not exist: {1}".format(NAME, itemid))
         if itemlist:
-            console.msg(mcolor(CMAG,"Items: {0}".format(", ".join(itemlist)),console.user["colors"]["enabled"]))
+            console.msg(mcolor(CMAG,"Items: {0}.".format(", ".join(itemlist)),console.user["colors"]["enabled"]))
 
         # Build and show the exit list.
         exitlist = []
         for ex in range(len(thisroom["exits"])):
             if thisroom["exits"][ex]["hidden"]==False or console.user["wizard"]==True:
-                if console.user["builder"]["enabled"]: exitlist.append("{0} ({1})".format(thisroom["exits"][ex]["name"], ex))
-                else: exitlist.append("{0}".format(thisroom["exits"][ex]["name"]))
+                if console.user["builder"]["enabled"]: exitlist.append("{0} ({1})".format(thisroom["exits"][ex]["name"].lower(), ex))
+                else: exitlist.append("{0}".format(thisroom["exits"][ex]["name"].lower()))
         if exitlist:
-            console.msg(mcolor(CGRN,"Exits: {0}".format(", ".join(exitlist)),console.user["colors"]["enabled"]))
+            #console.msg(mcolor(CGRN,"Exits: {0}".format(", ".join(exitlist)),console.user["colors"]["enabled"]))
+            if(len(exitlist)==1): console.msg(mcolor(CGRN,"There is one obvious exit: {0}.".format(", ".join(exitlist)),console.user["colors"]["enabled"]))
+            if(len(exitlist)>1): 
+                #exitlist[-1]="and "+exitlist[-1]
+                console.msg(mcolor(CGRN,"There are {0} obvious exits: {1}.".format(int_to_en(len(exitlist)),", ".join(exitlist)),console.user["colors"]["enabled"]))
         else:
-            console.msg("No exits in this room. Make one or use `xyzzy` to return to the first room.")
+            console.msg(mcolor(CGRN,"No exits in this room. Make one or use `xyzzy` to return to the first room.",console.user["colors"]["enabled"]))
         return True
 
     # There were arguments. Figure out what in the room they might be referring to.

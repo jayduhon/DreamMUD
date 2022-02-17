@@ -25,6 +25,8 @@
 # IN THE SOFTWARE.
 # **********
 
+from lib.litnumbers import *
+
 NAME = "inventory"
 CATEGORIES = ["items"]
 ALIASES = ["inv", "i"]
@@ -37,7 +39,11 @@ def COMMAND(console, args):
     if not COMMON.check(NAME, console, args, argc=0):
         return False
 
-        # Holding items
+    # Check if our inventory is empty.
+    if not console.user["equipment"]:
+        console.msg("{0}: You are not holding anything.".format(NAME))
+    
+    # Holding items
     if console.user["equipment"]:
         hitem = console.database.item_by_id(console.user["equipment"][0])
         console.msg("You are holding {0}.".format(COMMON.format_item(NAME, hitem["name"])))
@@ -67,5 +73,8 @@ def COMMAND(console, args):
         itemcount += 1
 
     # Finished.
-    console.msg("{0}: Total items: {1}".format(NAME, itemcount))
+    if itemcount>1:
+        console.msg("There are {0} items in your inventory.".format(int_to_en(itemcount)))
+    else:
+        console.msg("There is one item in your inventory.".format(int_to_en(itemcount)))
     return True

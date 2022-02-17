@@ -1,6 +1,6 @@
 #######################
 # Dennis MUD          #
-# hold.py             #
+# remove.py             #
 # Copyright 2018-2020 #
 # Michael D. Reiley   #
 #######################
@@ -19,23 +19,23 @@
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# AUTHORS OR COPYRIGHT removeERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 # **********
 
-NAME = "hold"
+NAME = "unhold"
 CATEGORIES = ["items"]
-ALIASES = ["wear","wield"]
-USAGE = "hold <item>"
-DESCRIPTION = """Hold the item called <item>.
+ALIASES = ["unwear","unwield"]
+USAGE = "unhold <item>"
+DESCRIPTION = """Remove the item called <item> so you don't hold it any more.
 
 You may use a full or partial item name, or the item ID.
-At the moment you can only hold a single item.
+At the moment you can only remove a single item.
 
-Ex. `hold crystal ball`
-Ex2. `hold 4`"""
+Ex. `unhold crystal ball`
+Ex2. `unhold 4`"""
 
 
 def COMMAND(console, args):
@@ -48,14 +48,9 @@ def COMMAND(console, args):
     if target == "the":
         console.msg("{0}: Very funny.".format(NAME))
         return False
-    
-    # Currently only one item supported.
-    if len(console.user["equipment"])>0:
-        console.msg("Your hands are full.")
-        return False
-    
+
     # Search our inventory for the target item.
-    for itemid in console.user["inventory"]:
+    for itemid in console.user["equipment"]:
         # Lookup the target item and perform item checks.
         thisitem = COMMON.check_item(NAME, console, itemid, reason=False)
         if not thisitem:
@@ -64,27 +59,27 @@ def COMMAND(console, args):
             console.msg("{0}: ERROR: Item referenced in this room does not exist: {1}".format(NAME, itemid))
             continue
 
-        # Check for name or id match. Also check if the user prepended "the ". Figure out how to hold it.
+        # Check for name or id match. Also check if the user prepended "the ". Figure out how to remove it.
         if target in [thisitem["name"].lower(), "the " + thisitem["name"].lower()] or str(thisitem["id"]) == target:
-            # Only non-owners lose duplified items when holding them.
-            if thisitem["id"] in console.user["equipment"]:
-                console.msg("{0}: You are already holding this item.".format(NAME))
+            # Only non-owners lose duplified items when removeing them.
+            if thisitem["id"] in console.user["inventory"]:
+                console.msg("{0}: You already have this item in your inventory.".format(NAME))
             else:
-                console.user["inventory"].remove(thisitem["id"])
-                console.user["equipment"].append(thisitem["id"])
-                console.shell.broadcast_room(console, "{0} starts to hold {1}.".format(console.user["nick"], COMMON.format_item(NAME, thisitem["name"])))            
+                console.user["equipment"].remove(thisitem["id"])
+                console.user["inventory"].append(thisitem["id"])
+                console.shell.broadcast_room(console, "{0} stops holding {1}.".format(console.user["nick"], COMMON.format_item(NAME, thisitem["name"])))
                 # Update the user document.
                 console.database.upsert_user(console.user)
             # Finished.
             return True
 
     # We didn't find the requested item. Check for a partial match.
-    partial = COMMON.match_partial(NAME, console, target, "item", room=False, inventory=True, equipment=False)
+    partial = COMMON.match_partial(NAME, console, target, "item", room=False, inventory=False, equipment=True)
     if partial:
         return COMMAND(console, partial)
-
-    # Maybe the user accidentally typed "hold item <item>".
+    # Maybe the user accidentally typed "remove item <item>".
     if args[0].lower() == "item":
-        console.msg("{0}: Maybe you meant \"hold {1}\".".format(NAME, ' '.join(args[1:])))
-
+        console.msg("{0}: Maybe you meant \"remove {1}\".".format(NAME, ' '.join(args[1:])))
+    
+    console.msg("Can't find the item you want to remove.")
     return False
