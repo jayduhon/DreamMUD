@@ -83,6 +83,11 @@ def COMMAND(console, args):
                     console.log.error("Item referenced in container does not exist: {room} :: {item}", room=console.user["room"], item=itemid)
                     console.msg("{0}: ERROR: Item referenced in this container does not exist: {1}".format(NAME, itemid))
                     continue
+                
+                if not thiscontainer["container"]["enabled"]:
+                    console.msg("{0} is not a container.".format(thiscontainer["name"]))
+                    return False
+                
                 if thisitemname in [thisitem["name"], "the " + thisitem["name"], thisitem["name"].lower(), "the " + thisitem["name"].lower()] or str(thisitem["id"]) == thisitemname:
                     # We found both! Time to put that item into the container.
                     # Lookup the target item and perform item checks.

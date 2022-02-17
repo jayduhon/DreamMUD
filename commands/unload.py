@@ -82,7 +82,7 @@ def COMMAND(console, args):
                 if not thisitem:
                     console.log.error("Item referenced in container does not exist: {room} :: {item}", room=console.user["room"], item=itemid)
                     console.msg("{0}: ERROR: Item referenced in this container does not exist: {1}".format(NAME, itemid))
-                    continue
+                    return False
                 if thisitemname in [thisitem["name"].lower(), "the " + thisitem["name"].lower()] or str(thisitem["id"]) == thisitemname:
                     # We found both! Time to put that item into the container.
                     
@@ -105,10 +105,9 @@ def COMMAND(console, args):
                     # Update the user document.
                     console.database.upsert_user(console.user)
                     return True
-                else:
-                    console.msg("Couldn't find {0} in the {1}.".format(thisitemname,thiscontainername))
-                    # Finished.
-                    return True
+            console.msg("Couldn't find {0} in the {1}.".format(thisitemname,thiscontainername))
+            # Finished.
+            return False
 
     # We didn't find the requested item. Check for a partial match.
     #partial_item = COMMON.match_partial(NAME, console, thisitemname.lower(), "item", room=False, inventory=True)

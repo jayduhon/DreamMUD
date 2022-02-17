@@ -99,10 +99,14 @@ def COMMAND(console, args):
                 else: exitlist.append("{0}".format(thisroom["exits"][ex]["name"].lower()))
         if exitlist:
             #console.msg(mcolor(CGRN,"Exits: {0}".format(", ".join(exitlist)),console.user["colors"]["enabled"]))
-            if(len(exitlist)==1): console.msg(mcolor(CGRN,"There is one obvious exit: {0}.".format(", ".join(exitlist)),console.user["colors"]["enabled"]))
-            if(len(exitlist)>1): 
-                #exitlist[-1]="and "+exitlist[-1]
-                console.msg(mcolor(CGRN,"There are {0} obvious exits: {1}.".format(int_to_en(len(exitlist)),", ".join(exitlist)),console.user["colors"]["enabled"]))
+            if(len(exitlist)>2):
+                for aex in range(len(exitlist)):
+                    if aex==len(exitlist)-1: exitlist[aex]="and "+exitlist[aex]
+                    elif aex==len(exitlist)-2: exitlist[aex]=exitlist[aex]+" "
+                    else: exitlist[aex]=exitlist[aex]+", "
+            elif (len(exitlist)==2):
+                    exitlist.insert(1, " and ") 
+            console.msg(mcolor(CGRN,"You can go {0} from here.".format("".join(exitlist)),console.user["colors"]["enabled"]))
         else:
             console.msg(mcolor(CGRN,"No exits in this room. Make one or use `xyzzy` to return to the first room.",console.user["colors"]["enabled"]))
         return True
@@ -193,7 +197,7 @@ def COMMAND(console, args):
 
                 # Send the info for this item.
                 if console.user["builder"]["enabled"]: console.msg("{0} ({1}) {2}".format(item["name"], item["id"], ' '.join(attributes)))
-                else: console.msg("{0}".format(item["name"]))
+                else: console.msg("{0} {1}".format(item["name"], ' '.join(attributes)))
                 if console.user["builder"]["enabled"]: console.msg("Owned by: {0}".format(', '.join(item["owners"])))
 
                 # Description exists, so show it.
