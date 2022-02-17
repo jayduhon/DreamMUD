@@ -58,6 +58,7 @@ def COMMAND(console, args):
         return False
     thisitem["desc"] = ""
     thisitem["action"] = ""
+    thisitem["message"] = ""
     thisitem["lang"] = None
     thisitem["glued"] = console.database.defaults["items"]["glued"]
     thisitem["hidden"] = False

@@ -80,6 +80,7 @@ def COMMAND(console, args):
         "name": itemname,
         "desc": "",
         "action": "",
+        "message": "",
         "lang" : None,
         "owners": [console.user["name"]],
         "glued": console.database.defaults["items"]["glued"],
