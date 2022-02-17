@@ -68,9 +68,15 @@ def COMMAND(console, args):
         userlist = []
         for user in thisroom["users"]:
             userlist.append(console.database.user_by_name(user)["nick"])
-        if len(userlist)>1:
+        if len(userlist)>2:
+            for aex in range(len(userlist)):
+                if aex==len(userlist)-1: userlist[aex]="and "+userlist[aex]
+                elif aex==len(userlist)-2: userlist[aex]=userlist[aex]+" "
+                else: userlist[aex]=userlist[aex]+", " 
+            console.msg(mcolor(CYELLO,"\n{0} are here.".format("".join(userlist)),console.user["colors"]["enabled"]))
+        elif len(userlist)==2:
             console.msg(mcolor(CYELLO,"\n{0} are here.".format(" and ".join(userlist)),console.user["colors"]["enabled"]))
-        else:
+        elif len(userlist)==1:
             console.msg(mcolor(CYELLO,"\n{0} is here.".format(" ".join(userlist)),console.user["colors"]["enabled"]))
 
         # Build and show the item list.
@@ -188,6 +194,8 @@ def COMMAND(console, args):
                         attributes.append("[container]")
                     if item["glued"]:
                         attributes.append("[glued]")
+                    if item["cursed"]["enabled"]:
+                        attributes.append("[cursed]")
                     if item["truehide"]:
                         attributes.append("[hidden]")
                     if item["lang"]:
@@ -244,6 +252,8 @@ def COMMAND(console, args):
                         attributes.append("[glued]")
                     if item["truehide"]:
                         attributes.append("[hidden]")
+                    if item["cursed"]["enabled"]:
+                        attributes.append("[cursed]")
                     if item["lang"]:
                         attributes.append("[language book]")
                     if item["container"]["enabled"]:

@@ -64,7 +64,8 @@ def COMMAND(console, args):
 
         # Look up room.
         targetroom = COMMON.check_room(NAME, console, roomid=targetuser["room"])
-        console.msg("You see a vision... \n{0}\n{1}".format(targetroom["name"], targetroom["desc"]))
+        #console.msg("You see a vision... \n{0}\n{1}".format(targetroom["name"], targetroom["desc"]))
+        console.msg("You see a vision... \n{0}\nThe vision ends...".format(targetroom["desc"]))
         return True
     
     elif args[0]=="reveal":
