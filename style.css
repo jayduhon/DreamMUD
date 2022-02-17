@@ -50,7 +50,12 @@ html {
   margin: auto;
 }
 #input {
-  background-color: #fff2df;
+  background: linear-gradient(90deg, #fff2df, #d9ad7c, #fff2df, #d9ad7c);
+	background-size: 400% 400%;
+	animation: AnimationName 20s linear infinite;
+	-webkit-animation: AnimationName 20s linear infinite;
+  -moz-animation: AnimationName 20s linear infinite;
+  -o-animation: AnimationName 20s linear infinite;
   border: 2px solid #d9ad7c;
   color: #402020;
   padding: 5px;
