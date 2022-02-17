@@ -35,7 +35,7 @@ SCOST=0
 USAGE = "perform <ritual> <optional ...>"
 DESCRIPTION = """Perform the ritual called <ritual>. 
 
-Current rituals: telepathy, identify, reveal.
+Current rituals: telepathy, identify, reveal, seer.
 
 Ex. `perform telepathy seisatsu Hello there!`
 Ex1. `perform reveal`"""
@@ -50,11 +50,29 @@ def COMMAND(console, args):
     #    console.msg("Not implemented yet.")
     #    return False
 
+    elif args[0]=="seer":
+        # Spirit cost of telepathy.
+        SCOST=5
+        if not COMMON.check(NAME, console, args, argmin=2, spiritcost=SCOST, spiritenabled=CONFIG["spiritenabled"]):
+            return False
+        msg = "{0} looks into the distance for a moment.".format(console.user["nick"])
+        console.shell.broadcast_room(console, msg)
+        # Make sure the named user exists and is online.
+        targetuser = COMMON.check_user(NAME, console, args[1].lower(), online=False)
+        if not targetuser:
+            return False
+
+        # Look up room.
+        targetroom = COMMON.check_room(NAME, console, roomid=targetuser["room"])
+        console.msg("You see a vision... \n{0}\n{1}".format(targetroom["name"], targetroom["desc"]))
+        return True
+    
     elif args[0]=="reveal":
         SCOST=5
         if not COMMON.check(NAME, console, args, argmax=1, spiritcost=SCOST, spiritenabled=CONFIG["spiritenabled"]):
             return False
-        
+        msg = "{0} tries to reveal hidden things with a ritual.".format(console.user["nick"])
+        console.shell.broadcast_room(console, msg)
         destroom = COMMON.check_room(NAME,console)
         dexits = destroom["exits"]
         for dex in range(len(dexits)):
@@ -76,9 +94,6 @@ def COMMAND(console, args):
                 if random.randint(1,4)==1:
                     dit["truehide"]=False
                     dit["hidden"]=False
-
-        msg = "{0} tries to reveal hidden things with a ritual.".format(console.user["nick"])
-        console.shell.broadcast_room(console, msg)
         return True
 
     elif args[0]=="identify":
