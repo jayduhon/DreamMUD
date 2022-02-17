@@ -1,15 +1,43 @@
 html {
   height: 95%;
 }
+
+@-webkit-keyframes AnimationName {
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+@-moz-keyframes AnimationName {
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+@-o-keyframes AnimationName {
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+@keyframes AnimationName {
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
 #chat_box {
   text-align: left;
   margin: auto;
   margin-top: 10px;
   margin-bottom: 15px;
   padding: 5px;
+  background: linear-gradient(90deg, #fff2df, #d9ad7c, #fff2df, #d9ad7c);
+	background-size: 400% 400%;
+	animation: AnimationName 20s linear infinite;
+	-webkit-animation: AnimationName 20s linear infinite;
+  -moz-animation: AnimationName 20s linear infinite;
+  -o-animation: AnimationName 20s linear infinite;
   background-color: #fff2df;
   color: #402020;
-  height: 80%;
+  height: 90%;
   width: 95%;
   border: 2px solid #d9ad7c;
   overflow: auto;
@@ -25,10 +53,11 @@ html {
   background-color: #fff2df;
   border: 2px solid #d9ad7c;
   color: #402020;
+  padding: 5px;
   width: 95%;
   height: auto;
   font-family: monospace;
-  font-size: 28pt;
+  font-size: 24pt;
   box-shadow: 7px 7px;
 }
 form.console {
