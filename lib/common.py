@@ -865,7 +865,7 @@ def match_partial(NAME, console, target, objtype, room=True, inventory=True, mes
     # Search for a target item.
     elif objtype == "item":
         # No locations were enabled for the search.
-        if not room and not inventory:
+        if not room and not inventory and not equipment:
             console.log.error("No locations chosen for item search in COMMON.match_partial from command: {name}",
                               name=NAME)
             console.msg("{0}: ERROR: Internal command error.".format(NAME))
