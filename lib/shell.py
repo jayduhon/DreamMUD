@@ -406,10 +406,12 @@ class Shell:
     
     def updatespirit(self):
         for u in self.router.users:
-            if self.router.users[u]["console"].user and not self.router.users[u]["console"].user["wizard"]:
+            if self.router.users[u]["console"].user and self.router.users[u]["console"].user["wizard"]==False:
                 try:
                     if self.router.users[u]["console"].user["spirit"]<100:
                         cursed = False
+                        if self.router.users[u]["console"].user["ghost"]:
+                            self.router.users[u]["console"].user["spirit"]-=15
                         # Iterate through inventory to see if they are cursed.
                         for it in self.router.users[u]["console"].user["inventory"]+self.router.users[u]["console"].user["equipment"]:
                             it2 = self.router.users[u]["console"].database.item_by_id(it)
@@ -421,8 +423,13 @@ class Shell:
                         else:
                             pass
                             #self.router.users[u]["console"].msg("Something keeps you from gaining spirit.")
-                    else: 
+                    elif self.router.users[u]["console"].user["spirit"]>100: 
                         self.router.users[u]["console"].user["spirit"]=100
+                    elif self.router.users[u]["console"].user["spirit"]<=0:
+                        if self.router.users[u]["console"].user["ghost"]:
+                            self.router.users[u]["console"].user["ghost"]=False
+                            self.router.users[u]["console"].msg("You are visible again.")
+                        self.router.users[u]["console"].user["spirit"]=0
                     self.router.users[u]["console"].database.upsert_user(self.router.users[u]["console"].user) 
                 except:
                     self.router.users[u]["console"].user["spirit"]=0

@@ -445,6 +445,8 @@ class DatabaseManager:
             "desc": self.defaults["first_user"]["desc"],
             "passhash": "0",
             "room": 0,
+            "spirit": 0,
+            "ghost": False,
             "inventory": [],
             "pronouns": "neutral",
             "pronouno": "neutral",
