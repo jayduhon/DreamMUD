@@ -1,6 +1,6 @@
 #######################
 # Dennis MUD          #
-# put_into.py             #
+# unload.py           #
 # Copyright 2018-2020 #
 # Michael D. Reiley   #
 #######################
@@ -28,7 +28,7 @@
 NAME = "unload"
 CATEGORIES = ["items"]
 USAGE = "unload <item> from <container>"
-DESCRIPTION = """unload the item called <item> from the <container>.
+DESCRIPTION = """Unload the item called <item> from the <container>.
 
 You may use a full or partial item name, or the item ID.
 
@@ -62,7 +62,7 @@ def COMMAND(console, args):
         return False
 
     
-    # Search our inventory for the target item.
+    # Search our inventory for the target container.
     for containerid in console.user["inventory"]:
         # Lookup the target item and perform item checks.
         thiscontainer = COMMON.check_item(NAME, console, containerid, reason=False)
@@ -84,14 +84,12 @@ def COMMAND(console, args):
                     console.msg("{0}: ERROR: Item referenced in this container does not exist: {1}".format(NAME, itemid))
                     return False
                 if thisitemname in [thisitem["name"].lower(), "the " + thisitem["name"].lower()] or str(thisitem["id"]) == thisitemname:
-                    # We found both! Time to put that item into the container.
-                    
-                    
+                    # We found both! Time to unload that item from the container.            
                     thiscontainer["container"]["inventory"].remove(thisitem["id"])
 
-                    # Only put unduplified items into the container unless we are the owner.
+                    # Only get unduplified items from the container unless we are the owner.
                     if not thisitem["duplified"] or console.user["name"] in thisitem["owners"]:
-                        # If the item is not in the room yet, add it.
+                        # If the item is not in the inventory yet, add it.
                         if thisitem["id"] in console.user["inventory"]:
                             console.msg("{0}: This item is already in your inventory.".format(NAME))
                         else:
@@ -99,25 +97,28 @@ def COMMAND(console, args):
                             console.shell.broadcast_room(console, "{0} has took {1} from {2}.".format(
                                 console.user["nick"], COMMON.format_item(NAME, thisitem["name"]),COMMON.format_item(NAME, thiscontainer["name"])))
 
-                    # Update the room document.
+                    # Update the container.
                     console.database.upsert_item(thiscontainer)
-
                     # Update the user document.
                     console.database.upsert_user(console.user)
                     return True
-            console.msg("Couldn't find {0} in the {1}.".format(thisitemname,thiscontainername))
+            #console.msg("Couldn't find {0} in the {1}.".format(thisitemname,thiscontainername))
             # Finished.
-            return False
+            #return False
 
     # We didn't find the requested item. Check for a partial match.
-    #partial_item = COMMON.match_partial(NAME, console, thisitemname.lower(), "item", room=False, inventory=True)
+    # Note: So unload needs to check partials on two items two times that leads to a double message as it is.
+    # I'll need to alter the COMMON framework more to suit it in the right way but for now it's OK.
+    
     partial_chest = COMMON.match_partial(NAME, console, thiscontainername.lower(), "item", room=False, inventory=True)
-    if partial_chest:
+    partial_item = COMMON.match_partial(NAME, console, thisitemname.lower(), "item", room=False, inventory=False, container=thiscontainer["container"])
+    if partial_chest and partial_item:
+        return COMMAND(console, partial_item+["from"]+partial_chest)
+    elif partial_chest and partial_chest != thiscontainername.split():
         return COMMAND(console, thisitemname.split()+["from"]+partial_chest)
-    else:
-        console.msg("Couldn't find them.")
-        return False
-
+    elif partial_item and partial_item != thisitemname.split():
+        return COMMAND(console, partial_item+["from"]+thiscontainername.split())
+    
     # Maybe the user accidentally typed "put into item <item>".
     if args[0].lower() == "item":
         console.msg("{0}: Maybe you meant \"unload {1}\".".format(NAME, ' '.join(args[1:])))
