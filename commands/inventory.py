@@ -75,6 +75,8 @@ def COMMAND(console, args):
     # Finished.
     if itemcount>1:
         console.msg("There are {0} items in your inventory.".format(int_to_en(itemcount)))
-    else:
+    elif itemcount==1:
         console.msg("There is one item in your inventory.".format(int_to_en(itemcount)))
+    else:
+        console.msg("There are no items in your inventory.")
     return True

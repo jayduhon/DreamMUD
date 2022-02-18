@@ -35,7 +35,7 @@ SCOST=0
 USAGE = "perform <ritual> <optional ...>"
 DESCRIPTION = """Perform the ritual called <ritual>. 
 
-Current rituals: telepathy, identify, reveal, seer.
+Current rituals: telepathy, identify, reveal, seer, ghost.
 
 Ex. `perform telepathy seisatsu Hello there!`
 Ex1. `perform reveal`"""
@@ -58,7 +58,7 @@ def COMMAND(console, args):
         msg = "{0} looks into the distance for a moment.".format(console.user["nick"])
         console.shell.broadcast_room(console, msg)
         # Make sure the named user exists and is online.
-        targetuser = COMMON.check_user(NAME, console, args[1].lower(), online=False)
+        targetuser = COMMON.check_user(NAME, console, args[1].lower(), online=True)
         if not targetuser:
             return False
 
@@ -68,6 +68,22 @@ def COMMAND(console, args):
         console.msg("You see a vision... \n{0}\nThe vision ends...".format(targetroom["desc"]))
         return True
     
+    elif args[0]=="ghost":
+        SCOST=50
+        if not COMMON.check(NAME, console, args, argmax=1, spiritcost=SCOST, spiritenabled=CONFIG["spiritenabled"]):
+            return False
+        if console.user["ghost"]:
+            console.user["spirit"]+=50
+            msg = "{0} suddenly appears.".format(console.user["nick"])
+            console.shell.broadcast_room(console, msg)
+            console.user["ghost"]=False
+        else:
+            msg = "{0} mutters a few words and disappears.".format(console.user["nick"])
+            console.shell.broadcast_room(console, msg)
+            console.user["ghost"]=True
+        console.database.upsert_user(console.user)
+        return True
+        
     elif args[0]=="reveal":
         SCOST=5
         if not COMMON.check(NAME, console, args, argmax=1, spiritcost=SCOST, spiritenabled=CONFIG["spiritenabled"]):
@@ -95,6 +111,13 @@ def COMMAND(console, args):
                 if random.randint(1,4)==1:
                     dit["truehide"]=False
                     dit["hidden"]=False
+                    
+        #for uss in destroom["users"]:
+        #    duss = console.database.user_by_name(uss)
+        #    if duss["ghost"]:
+        #        if random.randint(1,4)==1:
+        #            duss["ghost"]=False
+        #            console.shell.msg_user(duss["name"],"Someone revealed you.")            
         return True
 
     elif args[0]=="identify":

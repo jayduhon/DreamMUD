@@ -114,7 +114,7 @@ def COMMAND(console, args):
                     # This lock has a custom action.
                     if exits[ex]["action"]["locked"]:
                         # Broadcast a custom lock action if one exists.
-                        if "%player%" in exits[ex]["action"]["locked"]:
+                        if "%player%" in exits[ex]["action"]["locked"] and console.user["ghost"]==False:
                             COMMON.broadcast_action(NAME, console, exits[ex]["action"]["locked"])
                     # We couldn't take the exit, so fail.
                     return False
@@ -138,7 +138,7 @@ def COMMAND(console, args):
                     # Format and broadcast the default key action.
                     else:
                         action = "{0} used {1}.".format(console.user["nick"], thisitem["name"])
-                        console.shell.broadcast_room(console, action)
+                        if console.user["ghost"]==False: console.shell.broadcast_room(console, action)
 
             # Stand up if we aren't already.
             if console["posture"]:
@@ -174,11 +174,12 @@ def COMMAND(console, args):
             # This exit has a custom action.
             if exits[ex]["action"]["go"]:
                 # Broadcast a custom exit action.
-                COMMON.broadcast_action(NAME, console, exits[ex]["action"]["go"])
+                if console.user["ghost"]==False: COMMON.broadcast_action(NAME, console, exits[ex]["action"]["go"])
 
             # Format and broadcast the default exit action.
             else:
-                console.shell.broadcast_room(console, "{0} left the room through {1}.".format(
+                if console.user["ghost"]==False:
+                    console.shell.broadcast_room(console, "{0} left the room through {1}.".format(
                     console.user["nick"], exits[ex]["name"]))
 
             # Set our current room to the new room.
@@ -191,7 +192,8 @@ def COMMAND(console, args):
 
             # Format and broadcast the default entrance action, except to ourselves.
             else:
-                console.shell.broadcast_room(console, "{0} entered the room.".format(console.user["nick"]),
+                if console.user["ghost"]==False:
+                    console.shell.broadcast_room(console, "{0} entered the room.".format(console.user["nick"]),
                                              exclude=console.user["name"])
 
             # Save this room, the destination room, and the current user.

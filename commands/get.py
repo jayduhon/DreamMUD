@@ -70,6 +70,11 @@ def COMMAND(console, args):
         # Check for name or id match. Also check if the user prepended "the ".
         if target in [thisitem["name"].lower(), "the " + thisitem["name"].lower()] or str(thisitem["id"]) == target:
             # The item is glued down. Only the owner or a wizard can pick it up.
+            for uss in thisroom["users"]:
+                userconsole = console.shell.console_by_username(uss)
+                if userconsole["posture_item"]==target:
+                    console.msg("{0}: You cannot get this item.".format(NAME))
+                    return False 
             if thisitem["glued"] and console.user["name"] not in thisitem["owners"] and not console.user["wizard"]:
                 console.msg("{0}: You cannot get this item.".format(NAME))
                 return False

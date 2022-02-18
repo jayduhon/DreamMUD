@@ -67,7 +67,7 @@ def COMMAND(console, args):
         # Build and show the user list.
         userlist = []
         for user in thisroom["users"]:
-            userlist.append(console.database.user_by_name(user)["nick"])
+            if console.database.user_by_name(user)["ghost"]!=True: userlist.append(console.database.user_by_name(user)["nick"])
         if len(userlist)>2:
             for aex in range(len(userlist)):
                 if aex==len(userlist)-1: userlist[aex]="and "+userlist[aex]

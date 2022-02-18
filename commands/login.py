@@ -80,6 +80,6 @@ def COMMAND(console, args):
     # Show the log in message, broadcast our presence, and look at the room.
     console.msg("You are logged in as \"{0}\".".format(console.user["name"]))
     console.msg('=' * 20)
-    console.shell.broadcast_room(console, "{0} logged in.".format(console.user["nick"]))
+    if console.user["ghost"]==False: console.shell.broadcast_room(console, "{0} logged in.".format(console.user["nick"]))
     console.shell.command(console, "look", False)
     return True

@@ -25,6 +25,8 @@
 # IN THE SOFTWARE.
 # **********
 
+from lib.vigenere import *
+
 NAME = "read"
 CATEGORIES = ["items"]
 ALIASES = ["w"]
@@ -49,6 +51,7 @@ def COMMAND(console, args):
         console.msg("{0}: Very funny.".format(NAME))
         return False
 
+    mylang=console.database.user_by_name(console.user["name"])["lang"]
     # Search our inventory for the target item.
     for itemid in console.user["equipment"]:
         # Lookup the target item and perform item checks.
@@ -63,7 +66,10 @@ def COMMAND(console, args):
         if target in [thisitem["name"].lower(), "the " + thisitem["name"].lower()] or str(thisitem["id"]) == target:
             # Only non-owners lose duplified items when readping them.
             if thisitem["message"] != "":
-                console.msg("You read '{0}' on {1}".format(thisitem["message"],COMMON.format_item(NAME, thisitem["name"])))
+                emsg=thisitem["message"]
+                if mylang != thisitem["mlang"]:
+                    emsg=encvigenere(thisitem["message"],thisitem["mlang"])
+                console.msg("You read '{0}' on {1}".format(emsg,COMMON.format_item(NAME, thisitem["name"])))
                 console.shell.broadcast_room(console, "{0} reads something on {1}.".format(
                         console.user["nick"], COMMON.format_item(NAME, thisitem["name"])))
                 return True
