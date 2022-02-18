@@ -26,7 +26,7 @@
 # **********
 
 NAME = "language user"
-CATEGORIES = ["wizards"]
+CATEGORIES = ["wizard"]
 USAGE = "language user <name> <language>"
 DESCRIPTION = """Set a target player's language to <language>.
 

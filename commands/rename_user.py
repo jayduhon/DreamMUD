@@ -26,7 +26,7 @@
 # **********
 
 NAME = "rename user"
-CATEGORIES = ["wizards"]
+CATEGORIES = ["wizard"]
 USAGE = "rename user <name> <nickname>"
 DESCRIPTION = """Set a target player's nickname to <nickname>.
 
