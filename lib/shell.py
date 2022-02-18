@@ -413,7 +413,7 @@ class Shell:
                     if self.router.users[u]["console"].user["spirit"]<=0:
                         if self.router.users[u]["console"].user["ghost"]:
                             self.router.users[u]["console"].user["ghost"]=False
-                            self.router.users[u]["console"].broadcast_room(self.router.users[u]["console"].user["room"],"{0} is visible again.".format(self.router.users[u]["console"].user["nick"]))
+                            self.broadcast_room(self.router.users[u]["console"],"{0} is visible again.".format(self.router.users[u]["console"].user["nick"]))
                             self.router.users[u]["console"].msg("You are visible again.")
                         self.router.users[u]["console"].user["spirit"]=0
                     if self.router.users[u]["console"].user["spirit"]<100:
