@@ -408,10 +408,16 @@ class Shell:
         for u in self.router.users:
             if self.router.users[u]["console"].user and self.router.users[u]["console"].user["wizard"]==False:
                 try:
-                    if self.router.users[u]["console"].user["spirit"]<100 and self.router.users[u]["console"].user["spirit"]>=0:
-                        cursed = False
-                        if self.router.users[u]["console"].user["ghost"]:
+                    if self.router.users[u]["console"].user["ghost"]:
                             self.router.users[u]["console"].user["spirit"]-=15
+                    if self.router.users[u]["console"].user["spirit"]<=0:
+                        if self.router.users[u]["console"].user["ghost"]:
+                            self.router.users[u]["console"].user["ghost"]=False
+                            self.router.users[u]["console"].broadcast_room(self.router.users[u]["console"].user["room"],"{0} is visible again.".format(self.router.users[u]["console"].user["nick"]))
+                            self.router.users[u]["console"].msg("You are visible again.")
+                        self.router.users[u]["console"].user["spirit"]=0
+                    if self.router.users[u]["console"].user["spirit"]<100:
+                        cursed = False
                         # Iterate through inventory to see if they are cursed.
                         for it in self.router.users[u]["console"].user["inventory"]+self.router.users[u]["console"].user["equipment"]:
                             it2 = self.router.users[u]["console"].database.item_by_id(it)
@@ -421,16 +427,9 @@ class Shell:
                             self.router.users[u]["console"].user["spirit"]+=CONFIG["spiritrate"]
                             self.router.users[u]["console"].msg("You regain some spirit.")
                         else:
-                            pass
-                            #self.router.users[u]["console"].msg("Something keeps you from gaining spirit.")
+                            self.router.users[u]["console"].msg("Something keeps you from gaining spirit.")
                     elif self.router.users[u]["console"].user["spirit"]>100: 
                         self.router.users[u]["console"].user["spirit"]=100
-                    elif self.router.users[u]["console"].user["spirit"]<0:
-                        if self.router.users[u]["console"].user["ghost"]:
-                            self.router.users[u]["console"].user["ghost"]=False
-                            self.router.users[u]["console"].broadcast_room(self.router.users[u]["console"].user["room"],"{0} is visible again.".format(self.router.users[u]["console"].user["nick"]))
-                            self.router.users[u]["console"].msg("You are visible again.")
-                        self.router.users[u]["console"].user["spirit"]=0
                     self.router.users[u]["console"].database.upsert_user(self.router.users[u]["console"].user) 
                 except:
                     self.router.users[u]["console"].user["spirit"]=0
