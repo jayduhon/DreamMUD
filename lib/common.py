@@ -580,7 +580,13 @@ def check_user(NAME, console, username, online=False, wizard=None, room=False, l
 
     # Look up the target user.
     username = username.lower()
-
+    
+    try:
+        user = console.database.user_by_nick(username)
+        username = user["name"]
+    except:
+        pass        
+    
     # If we need to modify the user's live data, try to request the copy of the user document from the shell.
     # If the user isn't online, this will just grab from the database.
     # Otherwise, request the user document from the database to begin with.
@@ -588,7 +594,7 @@ def check_user(NAME, console, username, online=False, wizard=None, room=False, l
         targetuser = console.shell.user_by_name(username)
     else:
         targetuser = console.database.user_by_name(username)
-
+        
     # We couldn't find the user. Fail.
     if not targetuser:
         if reason:
