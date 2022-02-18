@@ -408,7 +408,7 @@ class Shell:
         for u in self.router.users:
             if self.router.users[u]["console"].user and self.router.users[u]["console"].user["wizard"]==False:
                 try:
-                    if self.router.users[u]["console"].user["spirit"]<100 and self.router.users[u]["console"].user["spirit"]>0:
+                    if self.router.users[u]["console"].user["spirit"]<100 and self.router.users[u]["console"].user["spirit"]>=0:
                         cursed = False
                         if self.router.users[u]["console"].user["ghost"]:
                             self.router.users[u]["console"].user["spirit"]-=15
@@ -425,7 +425,7 @@ class Shell:
                             #self.router.users[u]["console"].msg("Something keeps you from gaining spirit.")
                     elif self.router.users[u]["console"].user["spirit"]>100: 
                         self.router.users[u]["console"].user["spirit"]=100
-                    elif self.router.users[u]["console"].user["spirit"]<=0:
+                    elif self.router.users[u]["console"].user["spirit"]<0:
                         if self.router.users[u]["console"].user["ghost"]:
                             self.router.users[u]["console"].user["ghost"]=False
                             self.router.users[u]["console"].broadcast_room(self.router.users[u]["console"].user["room"],"{0} is visible again.".format(self.router.users[u]["console"].user["nick"]))
