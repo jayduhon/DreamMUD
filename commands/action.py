@@ -40,7 +40,7 @@ Ex. `action trips and falls over.`
 Ex2. `action A coconut falls on %player%'s head.`
 Ex3. `me trips and falls over.`
 Ex4. `:trips and falls over.`
-Ex5. `'s face turns bright red.`
+Ex5. `:'s face turns bright red.`
 Ex6. `%player%'s face turns bright red."""
 
 

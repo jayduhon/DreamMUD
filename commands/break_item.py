@@ -76,6 +76,13 @@ def COMMAND(console, args):
             if itemid in room["items"]:
                 room["items"].remove(itemid)
                 console.database.upsert_room(room)
+    
+    # Check if containers have it.
+    if thisitem["duplified"] or console.user["wizard"]:
+        for item in console.database.items.all():
+            if itemid in item["container"]["inventory"]:
+                item["container"]["inventory"].remove(itemid)
+                console.database.upsert_item(item)
 
     # It's still in our inventory, so it must not have been duplified. Delete it from our inventory now.
     if itemid in console.user["inventory"] and not thisitem["duplified"]:
