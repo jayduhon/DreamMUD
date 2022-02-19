@@ -86,6 +86,12 @@ def COMMAND(console, args):
             room["items"].remove(itemid)
             console.database.upsert_room(room)
 
+    # Delete the item from all containers.
+    for item in console.database.items.all():
+        if itemid in item["container"]["inventory"]:
+            item["container"]["inventory"].remove(itemid)
+            console.database.upsert_item(item)
+
     # Unduplify the item.
     thisitem["duplified"] = False
     console.database.upsert_item(thisitem)

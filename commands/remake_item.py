@@ -31,7 +31,7 @@ USAGE = "remake item <item_id>"
 DESCRIPTION = """Resets the item <item_id> in your inventory.
 
 Name and ID are untouched, you must be the primary owner of the item.
-Wizards can remake any item.
+Owners are reset to the primary owner only. Wizards can remake any item.
 
 Ex. `remake item 3`"""
 
@@ -55,6 +55,9 @@ def COMMAND(console, args):
     if len(thisitem["container"]["inventory"])>0:
         console.msg("{0} is not empty, please empty it before remaking.".format(thisitem["name"]))
         return False
+    if thisitem["duplified"]:
+        console.msg("Please unduplify this item before remaking.")
+        return False
     thisitem["desc"] = ""
     thisitem["action"] = ""
     thisitem["message"] = ""
@@ -65,7 +68,6 @@ def COMMAND(console, args):
     thisitem["hidden"] = False
     thisitem["truehide"] = False
     thisitem["chance"] = 1
-    thisitem["duplified"] = False
     thisitem["container"]["enabled"] = False
     thisitem["container"]["inventory"] = []
     thisitem["telekey"] = None

@@ -28,11 +28,11 @@
 NAME = "remake room"
 CATEGORIES = ["rooms"]
 USAGE = "remake room <room_id>"
-DESCRIPTION = """Resets the room <room_id> in this room.
+DESCRIPTION = """Resets the room with <room_id>.
 
-Name and owner list are untouched.
-You must own the room or its room.
-Wizards can remake any room.
+Name and ID are untouched, items stay in the room as well.
+You must be the primary owner of the room to remake it. Wizards can remake any room.
+Owners are reset to the primary owner only.
 
 Ex. `remake room 3`"""
 
