@@ -41,7 +41,6 @@ from lib import logger
 from lib import shell
 from lib import telnet
 from lib import websocket
-from lib import mccp
 from lib.color import *
 
 import builtins
@@ -55,8 +54,7 @@ from datetime import datetime
 from twisted.internet import reactor, ssl, task
 from OpenSSL import crypto as openssl
 
-import zlib
-IAC = chr(255)
+
 
 class Router:
     """Router
@@ -236,6 +234,7 @@ def init_services(config, router, log):
     # If telnet is enabled, initialize its service.
     if config["telnet"]["enabled"]:
         telnet_factory = telnet.ServerFactory(router)
+        telnet_factory.protocol = telnet.ServerProtocol
         reactor.listenTCP(config["telnet"]["port"], telnet_factory)
         any_enabled = True
 
