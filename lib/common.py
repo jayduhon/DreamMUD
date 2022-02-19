@@ -30,6 +30,8 @@
 
 from tinydb.table import Document
 
+def split_list(lst, sep):
+    return [i.strip() for i in ' '.join(lst).split(sep)]
 
 def check(NAME, console, args, argc=None, argmin=None, argmax=None, online=True, wizard=False,
           usage=True, reason=True, spiritcost=None, spiritenabled=None):
@@ -389,7 +391,7 @@ def check_item(NAME, console, itemid, owner=None, primary=False, holding=False, 
     # Check if the calling user is holding the item.
     if holding:
         # They are not holding the item, and they aren't a wizard who can twiddle items remotely. Fail.
-        if itemid not in console.user["inventory"] and (not console.user["wizard"] or not orwizard):
+        if itemid not in console.user["inventory"]+console.user["equipment"] and (not console.user["wizard"] or not orwizard):
             if reason:
                 console.msg("{0}: You are not holding that item.".format(NAME))
             return None
