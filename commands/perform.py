@@ -149,12 +149,12 @@ def COMMAND(console, args):
             dit = console.database.item_by_id(dit)
             # Check for randomized chance
             if dit["chance"] and dit["hidden"]==True:
-                if random.randint(1,dit["chance"])==1: 
+                if dit["truehide"]==True:
+                    console.msg("You sense {0} being hidden around here.".format(COMMON.format_item(NAME, dit["name"])))
+                elif random.randint(1,dit["chance"])==1: 
                     #dit["truehide"]=False
                     dit["hidden"]=False
                 # A small chance to reveal truly hidden stuff.
-                if dit["truehide"]==True:
-                    console.msg("You sense {0} in this room.".format(COMMON.format_item(NAME, dit["name"])))
                     
         #for uss in destroom["users"]:
         #    duss = console.database.user_by_name(uss)
