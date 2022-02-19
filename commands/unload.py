@@ -42,18 +42,9 @@ def COMMAND(console, args):
     if not COMMON.check(NAME, console, args, argmin=3):
         return False
 
-    # Iterate through the args to split it into two
-    thisitemname=[]
-    thiscontainername=[]
-    sw=0
-    for ar in args:
-        if ar=="from":
-            sw=1
-        elif sw==0: thisitemname.append(ar)
-        elif sw==1: thiscontainername.append(ar)
-    thisitemname=' '.join(thisitemname)
-    thiscontainername=' '.join(thiscontainername)
-
+    args=COMMON.split_list(args,"from")
+    thisitemname=args[0]
+    thiscontainername=args[1]
 
     # Get item name/id.
     target = thiscontainername.lower()
@@ -111,7 +102,11 @@ def COMMAND(console, args):
     # I'll need to alter the COMMON framework more to suit it in the right way but for now it's OK.
     
     partial_chest = COMMON.match_partial(NAME, console, thiscontainername.lower(), "item", room=False, inventory=True)
-    partial_item = COMMON.match_partial(NAME, console, thisitemname.lower(), "item", room=False, inventory=False, container=thiscontainer["container"])
+    # If the inventory is empty, thiscontainer was never an object.
+    try:
+        partial_item = COMMON.match_partial(NAME, console, thisitemname.lower(), "item", room=False, inventory=False, container=thiscontainer["container"])
+    except: 
+        partial_item=None
     if partial_chest and partial_item:
         return COMMAND(console, partial_item+["from"]+partial_chest)
     elif partial_chest and partial_chest != thiscontainername.split():

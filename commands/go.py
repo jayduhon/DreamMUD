@@ -110,7 +110,11 @@ def COMMAND(console, args):
                 # The exit is locked and the player does not have the key.
                 if not exits[ex]["key"] in console.user["inventory"]:
                     console.msg("{0}: This exit is locked.".format(NAME))
-
+                    if not COMMON.check_item(NAME, console, exits[ex]["key"], reason=False):
+                        console.log.error("Key item referenced in the exit does not actually exist: {thisitem}",
+                                          thisitem=exits[ex]["key"])
+                        exits[ex]["key"]=None
+                        console.database.upsert_room(thisroom)
                     # This lock has a custom action.
                     if exits[ex]["action"]["locked"]:
                         # Broadcast a custom lock action if one exists.

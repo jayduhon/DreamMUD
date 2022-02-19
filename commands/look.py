@@ -317,6 +317,12 @@ def COMMAND(console, args):
                                                      or console.user["wizard"]
                                                      or not thisroom["exits"][ex]["key_hidden"]):
                     item = console.database.item_by_id(thisroom["exits"][ex]["key"])
+                    # Key does not exist, remove it and log the event.
+                    if not item:
+                        console.log.error("Key item referenced in the exit does not actually exist: {thisitem}",
+                                          thisitem=exits[ex]["key"])
+                        exits[ex]["key"]=None
+                        console.database.upsert_room(thisroom)
                     if console.user["builder"]["enabled"]: console.msg("Unlocked with: {0} (ID: {1})".format(item["name"], item["id"]))
                     else: console.msg("Unlocked with: {0}.".format(item["name"]))
                 found_something = True

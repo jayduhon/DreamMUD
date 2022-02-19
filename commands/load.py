@@ -37,7 +37,6 @@ Duplified items will vanish when you put them away, unless you are an owner.
 Ex. `load 4 into bag`
 Ex2. `load a coffee into the large chest`"""
 
-
 def COMMAND(console, args):
 
     # Perform initial checks.
@@ -45,17 +44,17 @@ def COMMAND(console, args):
         return False
 
     # Iterate through the args to split it into two
-    thisitemname=[]
-    thiscontainername=[]
-    sw=0
-    for ar in args:
-        if ar=="into":
-            sw=1
-        elif sw==0: thisitemname.append(ar)
-        elif sw==1: thiscontainername.append(ar)
-    thisitemname=' '.join(thisitemname)
-    thiscontainername=' '.join(thiscontainername)
-
+    args=COMMON.split_list(args,"into")
+    thisitemname=args[0]
+    thiscontainername=args[1]
+    #sw=0
+    #for ar in args:
+    #    if ar=="into":
+    #        sw=1
+    #    elif sw==0: thisitemname.append(ar)
+    #    elif sw==1: thiscontainername.append(ar)
+    #thisitemname=' '.join(thisitemname)
+    #thiscontainername=' '.join(thiscontainername)    
 
     # Get item name/id.
     target = thisitemname.lower()
