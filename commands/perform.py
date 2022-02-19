@@ -35,7 +35,7 @@ SCOST=0
 USAGE = "perform <ritual> <optional ...>"
 DESCRIPTION = """Perform the ritual called <ritual>. 
 
-Current rituals: telepathy, identify, reveal, seer, ghost.
+Current rituals: telepathy, identify, reveal, seer, ghost, cleanse.
 
 Ex. `perform telepathy seisatsu Hello there!`
 Ex1. `perform reveal`"""
@@ -50,20 +50,65 @@ def COMMAND(console, args):
     #    console.msg("Not implemented yet.")
     #    return False
 
+    if args[0]=="cleanse":
+        SCOST=5
+        #if thisreceiver==console.user["name"] or thisreceiver==console.user["nick"] or thisreceiver==console.user["nick"].lower():
+        #    console.msg("Can't cleanse yourself.")
+        #    return False        
+        if not COMMON.check(NAME, console, args, argmin=2, spiritcost=SCOST, spiritenabled=CONFIG["spiritenabled"]):
+            return False
+
+        thisreceiver = ' '.join(args[1:])
+        targetuser = COMMON.check_user(NAME, console, thisreceiver, room=True, online=True, live=True, reason=False,
+                                   wizardskip=["room", "online"])
+        if not targetuser:
+            # Check for a partial user match, and try running again if there's just one.
+            partial = COMMON.match_partial(NAME, console, thisreceiver, "user", message=False)
+            if partial:
+                return COMMAND(console,["cleanse"]+partial)
+            console.msg("{0}: No such user in this room.".format(NAME))
+            return False
+        
+        msg = "{0} focuses on {1} for a moment.".format(console.user["nick"],targetuser["nick"])
+        console.shell.broadcast_room(console, msg)
+        
+        for it in targetuser["inventory"]:
+            thisitem = COMMON.check_item(NAME, console, it, owner=False, holding=False)
+            if thisitem["cursed"]["enabled"]:
+                thisitem["cursed"]["enabled"]=False
+                console.database.upsert_item(thisitem)
+                console.shell.msg_user(targetuser["name"],"{0} cleansed some of your items.".format(console.user["nick"]))
+                if targetuser["pronouns"]=="male":
+                    console.msg("You cleansed some of his items.")
+                elif targetuser["pronouns"]=="female":
+                    console.msg("You cleansed some of her items.")
+                elif targetuser["pronouns"]=="neutral":
+                    console.msg("You cleansed some of their items.")
+                else:
+                    console.msg("You cleansed some of {0} items.".format(targetuser["pronouno"]))
+        return True
+
     elif args[0]=="seer":
         # Spirit cost of telepathy.
         SCOST=5
         if not COMMON.check(NAME, console, args, argmin=2, spiritcost=SCOST, spiritenabled=CONFIG["spiritenabled"]):
             return False
-        msg = "{0} looks into the distance for a moment.".format(console.user["nick"])
-        console.shell.broadcast_room(console, msg)
+        thisreceiver = ' '.join(args[1:])
         # Make sure the named user exists and is online.
-        targetuser = COMMON.check_user(NAME, console, args[1].lower(), online=True)
+        targetuser = COMMON.check_user(NAME, console, thisreceiver, online=True)
+
         if not targetuser:
+            # Check for a partial user match, and try running again if there's just one.
+            partial = COMMON.match_partial(NAME, console, thisreceiver, "user", message=False)
+            if partial:
+                return COMMAND(console,["seer"]+partial)
+            console.msg("{0}: No such user was found.".format(NAME))
             return False
 
         # Look up room.
         targetroom = COMMON.check_room(NAME, console, roomid=targetuser["room"])
+        msg = "{0} looks into the distance for a moment.".format(console.user["nick"])
+        console.shell.broadcast_room(console, msg)
         #console.msg("You see a vision... \n{0}\n{1}".format(targetroom["name"], targetroom["desc"]))
         console.msg("You see a vision... \n{0}\nThe vision ends...".format(targetroom["desc"]))
         return True
@@ -105,12 +150,11 @@ def COMMAND(console, args):
             # Check for randomized chance
             if dit["chance"] and dit["hidden"]==True:
                 if random.randint(1,dit["chance"])==1: 
-                    dit["truehide"]=False
+                    #dit["truehide"]=False
                     dit["hidden"]=False
                 # A small chance to reveal truly hidden stuff.
-                if random.randint(1,4)==1:
-                    dit["truehide"]=False
-                    dit["hidden"]=False
+                if dit["truehide"]==True:
+                    console.msg("You sense {0} in this room.".format(COMMON.format_item(NAME, dit["name"])))
                     
         #for uss in destroom["users"]:
         #    duss = console.database.user_by_name(uss)

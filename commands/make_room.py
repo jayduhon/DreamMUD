@@ -27,7 +27,7 @@
 
 NAME = "make room"
 CATEGORIES = ["rooms"]
-SCOST = 50
+SCOST = 10
 ALIASES = ["create room", "new room"]
 USAGE = "make room <room_name>"
 DESCRIPTION = """Create a new room called <room_name>.

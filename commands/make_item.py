@@ -27,7 +27,7 @@
 
 NAME = "make item"
 CATEGORIES = ["items"]
-SCOST = 25
+SCOST = 10
 ALIASES = ["create item", "new item"]
 USAGE = "make item <item_name>"
 DESCRIPTION = """Create a new item called <item_name> and place it in your inventory.

@@ -46,7 +46,8 @@ def COMMAND(console, args):
     # Holding items
     if console.user["equipment"]:
         hitem = console.database.item_by_id(console.user["equipment"][0])
-        console.msg("You are holding {0}.".format(COMMON.format_item(NAME, hitem["name"])))
+        if console.user["builder"]["enabled"]: console.msg("You are holding {0} (ID: {1}).".format(COMMON.format_item(NAME, hitem["name"]),console.user["equipment"][0]))
+        else: console.msg("You are holding {0}.".format(COMMON.format_item(NAME, hitem["name"])))
 
     # Check if our inventory is empty.
     if not console.user["inventory"]:
@@ -66,7 +67,7 @@ def COMMAND(console, args):
             continue
 
         # Show the item's name and ID.
-        if console.user["builder"]["enabled"]: console.msg("{0} ({1})".format(thisitem["name"], itemid))
+        if console.user["builder"]["enabled"]: console.msg("{0} (ID: {1})".format(thisitem["name"], itemid))
         else: console.msg("{0}".format(thisitem["name"]))
 
         # Keep count.

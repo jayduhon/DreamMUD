@@ -27,7 +27,7 @@
 
 NAME = "make exit"
 CATEGORIES = ["exits"]
-SCOST = 25
+SCOST = 10
 ALIASES = ["create exit", "new exit"]
 USAGE = "make exit <destination> <exit_name>"
 DESCRIPTION = """Create a new exit called <exit_name> in the current room, leading to the room with ID <destination>.

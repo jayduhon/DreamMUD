@@ -65,6 +65,7 @@ def COMMAND(console, args):
         return False
     if args[1]=="simple":
         thisitem["lang"] = None
+        thisitem["cursed"]["enabled"] = False
         if(len(thisitem["container"]["inventory"]))>0:
             console.msg("Can't make it a non-container, please empty the item first.")
             return False

@@ -70,7 +70,6 @@ def COMMAND(console, args):
                                    wizardskip=["room", "online"])
     if not targetuser:
         # Check for a partial user match, and try running again if there's just one.
-        print(args)
         partial = COMMON.match_partial(NAME, console, thisreceiver.lower(), "user")
         if partial:
             argstemp = thisitemname.split()+["to"]+partial
@@ -104,7 +103,7 @@ def COMMAND(console, args):
 
             # Send messages to ourselves and the target user.
             console.msg("You gave {0} {1}.".format(targetuser["nick"], COMMON.format_item(NAME, thisitem["name"])))
-            console.shell.msg_user(thisreceiver.lower(),
+            console.shell.msg_user(targetuser["name"],
                                    "{0} gave you {1}.".format(console.user["nick"],
                                                               COMMON.format_item(NAME, thisitem["name"])))
 
