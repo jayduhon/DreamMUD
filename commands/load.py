@@ -128,7 +128,7 @@ def COMMAND(console, args):
     if partial_item and partial_chest:
         return COMMAND(console, partial_item+["into"]+partial_chest)
     else:
-        console.msg("Couldn't find them.")
+        #console.msg("Couldn't find them.")
         return False
 
     # Maybe the user accidentally typed "put into item <item>".

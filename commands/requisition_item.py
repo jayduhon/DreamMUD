@@ -71,6 +71,13 @@ def COMMAND(console, args):
                     COMMON.format_item(NAME, thisitem["name"], upper=True)))
                 console.database.upsert_room(room)
 
+        # If the item is in a container's inventory, remove it.
+        for cont in console.database.items.all():
+            if cont["container"]["enabled"]:
+                if itemid in cont["inventory"]:
+                    cont["container"]["inventory"].remove(itemid)
+                    console.database.upsert_item(cont)
+        
         # If the item is in someone's inventory, remove it and announce its disappearance.
         for user in console.router.users.values():
             if itemid in user["console"].user["inventory"]:

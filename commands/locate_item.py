@@ -29,7 +29,7 @@ NAME = "locate item"
 CATEGORIES = ["items"]
 ALIASES = ["find item"]
 USAGE = "locate item <item_id>"
-DESCRIPTION = """Find out what room the item <item_id> is in, or who is holding it.
+DESCRIPTION = """Find out what room the item <item_id> is in, or who is having it.
 
 You can only locate an item that you own.
 Wizards can locate any item.
@@ -63,12 +63,23 @@ def COMMAND(console, args):
             return True
         found_something = True
 
+    # Check if a container is holding the item.
+    for targetitem in console.database.items.all():
+        if targetitem["container"]["enabled"]:
+            if itemid in targetitem["container"]["inventory"]:
+                console.msg("{0}: {1} (ID: {2}) is in the inventory of this container: {3} (ID: {4}).".format(NAME, thisitem["name"], thisitem["id"],
+                                                                               targetitem["name"],targetitem["id"]))
+                # If the item is duplified we need to keep looking for other copies.
+                if not thisitem["duplified"]:
+                    return True
+                found_something = True
+
     # Check if someone else is holding the item.
     for targetuser in console.database.users.all():
         if targetuser["name"] == console.user["name"]:
             continue
         if itemid in targetuser["inventory"]:
-            console.msg("{0}: {1} ({2}) is in the inventory of: {3}.".format(NAME, thisitem["name"], thisitem["id"],
+            console.msg("{0}: {1} (ID: {2}) is in the inventory of: {3}.".format(NAME, thisitem["name"], thisitem["id"],
                                                                            targetuser["name"]))
             # If the item is duplified we need to keep looking for other copies.
             if not thisitem["duplified"]:
@@ -78,7 +89,7 @@ def COMMAND(console, args):
     # Check if the item is in a room.
     for targetroom in console.database.rooms.all():
         if itemid in targetroom["items"]:
-            console.msg("{0}: {1} ({2}) is in room: {3} ({4})".format(NAME, thisitem["name"], thisitem["id"],
+            console.msg("{0}: {1} (ID: {2}) is in room: {3} (ID: {4})".format(NAME, thisitem["name"], thisitem["id"],
                                                                      targetroom["name"], targetroom["id"]))
             # If the item is duplified we need to keep looking for other copies.
             if not thisitem["duplified"]:

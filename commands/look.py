@@ -63,6 +63,8 @@ def COMMAND(console, args):
         if console.user["builder"]["enabled"]: console.msg("Owned by: {0}".format(', '.join(thisroom["owners"])))
         if thisroom["desc"]:
             console.msg(thisroom["desc"])
+        else:
+            console.msg("A room of void, a room of nothingness.") # Print default no-desc message.
 
         # Build and show the user list.
         userlist = []
@@ -211,6 +213,8 @@ def COMMAND(console, args):
                 # Description exists, so show it.
                 if item["desc"]:
                     console.msg(item["desc"])
+                else:
+                    console.msg(CONFIG["nodesc"]) # Print default no-desc message.
 
                 # List content if it's a container
                 if item["container"]["enabled"]:
@@ -270,6 +274,8 @@ def COMMAND(console, args):
                 # Description exists, so show it.
                 if item["desc"]:
                     console.msg(item["desc"])  # Print item description.
+                else:
+                    console.msg(CONFIG["nodesc"]) # Print default no-desc message.
 
                 # List content if it's a container
                 if item["container"]["enabled"]:
@@ -304,7 +310,7 @@ def COMMAND(console, args):
                 if thisroom["exits"][ex]["desc"]:
                     console.msg(thisroom["exits"][ex]["desc"])
                 else:
-                    console.msg("Nothing unusual about that exit.")
+                    console.msg(CONFIG["nodesc"]) # Print default no-desc message.
 
                 # Key info is visible or we own the exit or are a wizard, so show it.
                 if thisroom["exits"][ex]["key"] and (console.user["name"] in thisroom["exits"][ex]["owners"]
@@ -330,6 +336,11 @@ def COMMAND(console, args):
             # Description exists, so show it.
             if user["desc"]:
                 console.msg(user["desc"])  # Print user description.
+            else:
+                if user["pronouns"] == "male": console.msg("Nothing unusual about him.")
+                elif user["pronouns"] == "female": console.msg("Nothing unusual about her.")
+                elif user["pronouns"] == "neutral": console.msg("Nothing unusual about them.")
+                else: console.msg("Nothing unusual about {0}.".format(user["pronouno"].capitalize()))  # Print user description.
 
             # If they are sitting or laying down, format a message saying so after the description.
             userconsole = console.shell.console_by_username(user["name"])
