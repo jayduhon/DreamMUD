@@ -18,6 +18,7 @@ import zlib
 
 # negotiations for v1 and v2 of the protocol
 MCCP = bytes([86])  # b"\x56"
+MCCP2 = b"\x56"
 FLUSH = zlib.Z_SYNC_FLUSH
 
 

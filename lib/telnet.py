@@ -33,7 +33,28 @@ from lib.logger import Logger
 
 from twisted.internet import protocol
 from twisted.protocols.basic import LineReceiver
+from twisted.conch.telnet import (
+    IAC,
+    NOP,
+    LINEMODE,
+    GA,
+    WILL,
+    DONT,
+    DO,
+    SB,
+    SE,
+    NAWS,
+    WONT,
+    ECHO,
+    NULL,
+    MODE,
+    LINEMODE_EDIT,
+    LINEMODE_TRAPSIG,
+)
 
+from lib.mccp import *
+import zlib
+#IAC = chr(255)
 # Read the motd file.
 try:
     with open("motd.telnet.txt") as f:
@@ -52,6 +73,17 @@ class ServerProtocol(LineReceiver):
         p = self.transport.getPeer()
         self.peer = p.host + ':' + str(p.port)
         self.factory.register(self)
+        self.protocol_flags = {
+            "ENCODING": "utf-8",
+            "SCREENREADER": False,
+            "MCCP": True,
+        }
+        # MCCP start
+        #if self.protocol_flags["MCCP"]:
+        #    mccpstart=IAC+WILL+MCCP2
+        #    self.factory.communicate(self.peer, mccpstart, cmd=True)
+        #    self._log.info("Sending MCCP offer to: {peer}", peer=self.peer)
+        # MCCP end
         self._log.info("Client connected: {peer}", peer=self.peer)
         if motd:
             self.factory.communicate(self.peer, motd.encode('utf-8'))
@@ -62,6 +94,13 @@ class ServerProtocol(LineReceiver):
 
     def lineReceived(self, line):
         # Don't log passwords.
+        
+        # MCCP start
+        #if IAC+DO+MCCP2 in line:
+        #    print("Client accepting to get mccp!")
+        #    startmccp = IAC+SB+ MCCP2+ IAC+ SE
+        #    self.factory.communicate(self.peer, startmccp, cmd=True)
+        # MCCP end
         passcheck = line.split(b' ')
         if passcheck[0] == b'login' and len(passcheck) > 2:
             passcheck = b' '.join(passcheck[:2] + [b'********'])
@@ -116,11 +155,12 @@ class ServerFactory(protocol.Factory):
             if c['client-peer'] == client.peer:
                 self.clients.remove(c)
 
-    def communicate(self, peer, payload):
+    def communicate(self, peer, payload, cmd=False):
         client = None
         for c in self.clients:
             if c['client-peer'] == peer:
                 client = c['client']
         if client:
             # Telnet wants a CRLF instead of just an LF. Some clients require this to display properly.
-            client.sendLine(payload.decode('utf-8').replace('\n', '\r\n').encode('utf-8'))
+            if cmd: client.sendLine(payload)
+            else: client.sendLine(payload.decode('utf-8').replace('\n', '\r\n').encode('utf-8'))
