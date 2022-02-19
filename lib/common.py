@@ -940,9 +940,12 @@ def match_partial(NAME, console, target, objtype, room=True, inventory=True, mes
     # Search for a target user.
     elif objtype == "user":
         for user in thisroom["users"]:
-            if target in user:
+            thisname = COMMON.check_user(NAME, console, user)["nick"].lower()
+            if target.lower() in user:
                 partials.append(user)
-
+            elif target.lower() in thisname:
+                partials.append(thisname)
+                
     # Eliminate duplicate matches.
     if partials:
         partials = list(dict.fromkeys(partials))
