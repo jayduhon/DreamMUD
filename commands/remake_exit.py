@@ -48,12 +48,13 @@ def COMMAND(console, args):
         return False
 
     # Lookup the current room, and perform exit checks.
-    thisroom = COMMON.check_exit(NAME, console, exitid, owner=True)
+    thisroom = COMMON.check_exit(NAME, console, exitid, owner=True, primary=True)
     if not thisroom:
         return False
 
     # remake the exit.
     thisroom["exits"][exitid]["desc"] = ""
+    thisroom["exits"][exitid]["owners"] = [user.console["name"]]
     thisroom["exits"][exitid]["key"] = None
     thisroom["exits"][exitid]["key_hidden"] = True
     thisroom["exits"][exitid]["locked"] = False

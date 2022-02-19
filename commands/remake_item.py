@@ -28,10 +28,9 @@
 NAME = "remake item"
 CATEGORIES = ["items"]
 USAGE = "remake item <item_id>"
-DESCRIPTION = """Resets the item <item_id> in this room.
+DESCRIPTION = """Resets the item <item_id> in your inventory.
 
-Name and owner list are untouched.
-You must own the item or its room.
+Name and ID are untouched, you must be the primary owner of the item.
 Wizards can remake any item.
 
 Ex. `remake item 3`"""
@@ -48,7 +47,7 @@ def COMMAND(console, args):
         return False
 
     # Lookup the target item and perform item checks.
-    thisitem = COMMON.check_item(NAME, console, itemid, owner=True, holding=True)
+    thisitem = COMMON.check_item(NAME, console, itemid, owner=True, primary=True, holding=True)
     if not thisitem:
         return False
 
@@ -59,7 +58,9 @@ def COMMAND(console, args):
     thisitem["desc"] = ""
     thisitem["action"] = ""
     thisitem["message"] = ""
+    thisitem["mlang"] = None
     thisitem["lang"] = None
+    thisitem["owners"] = [console.user["name"]]
     thisitem["glued"] = console.database.defaults["items"]["glued"]
     thisitem["hidden"] = False
     thisitem["truehide"] = False

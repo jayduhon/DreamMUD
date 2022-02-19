@@ -398,7 +398,7 @@ def COMMAND(console, args):
             for username in thisroom["users"]:
                 usertemp = console.database.user_by_name(username)
                 if usertemp:
-                    if target in usertemp["nick"] or target.capitalize() in usertemp["nick"]:
+                    if target.lower() in usertemp["nick"].lower():
                         partials.append(usertemp["nick"])
 
             # Look for an exact nickname match.

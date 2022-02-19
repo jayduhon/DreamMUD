@@ -48,7 +48,7 @@ def COMMAND(console, args):
         return False
 
     # Lookup the target room and perform room checks.
-    thisroom = COMMON.check_room(NAME, console, roomid, owner=True)
+    thisroom = COMMON.check_room(NAME, console, roomid, owner=True, primary=True)
     if not thisroom:
         return False
 
@@ -56,7 +56,7 @@ def COMMAND(console, args):
     thisroom["desc"] = ""
     thisroom["exits"] = []
     thisroom["entrances"] = []
-    #thisroom["items"] = []
+    thisroom["owners"] = [console.user["name"]]
     thisroom["sealed"]["inbound"] = console.database.defaults["rooms"]["sealed"]["inbound"]
     thisroom["sealed"]["outbound"] = console.database.defaults["rooms"]["sealed"]["outbound"]
 
