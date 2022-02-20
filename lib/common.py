@@ -572,7 +572,7 @@ def check_room(NAME, console, roomid=None, owner=None, primary=None, orwizard=Tr
     return targetroom
 
 
-def check_user(NAME, console, username, online=False, wizard=None, room=False, live=False, reason=True, already=False,
+def check_user(NAME, console, username, online=False, offline=False, wizard=None, room=False, live=False, reason=True, already=False,
                wizardskip=None):
     """Check if a user exists. If so, return it.
 
@@ -580,6 +580,7 @@ def check_user(NAME, console, username, online=False, wizard=None, room=False, l
     :param console: The calling user's console.
     :param username: The username of the user to check.
     :param online: Whether to check if the user is online.
+    :param offline: Whether to check if the user is offline.
     :param room: If set, check if the user is in the current room.
     :param wizard: If True, check if the user is a wizard. If False, check if the user is not a wizard.
     :param live: Whether to try to grab the live copy of the user document instead of pulling from the database.
@@ -626,7 +627,12 @@ def check_user(NAME, console, username, online=False, wizard=None, room=False, l
         if reason:
             console.msg("{0}: That user is not online.".format(NAME))
         return None
-
+    
+    elif offline and console.database.online(username):
+        if reason:
+            console.msg("{0}: That user is online.".format(NAME))
+        return None
+    
     # Check the wizardship of the user.
     elif wizard is not None:
         # We want the user to be a wizard and they are not. Fail.
