@@ -61,6 +61,8 @@ def COMMAND(console, args):
         console.router._reactor.callLater(1, console._reset_login_delay)
         return False  # Bad login.
     console.user = thisuser
+    if console.router.websocket_factory:
+        console.user["colors"]["service"]="websocket"
 
     # Lookup the current room and perform room checks.
     thisroom = COMMON.check_room(NAME, console)

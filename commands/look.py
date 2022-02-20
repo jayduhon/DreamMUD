@@ -59,7 +59,7 @@ def COMMAND(console, args):
     if len(args) == 0:
         # Show the room name, ID, owners, and description.
         if console.user["builder"]["enabled"]: console.msg("{0} (ID: {1})".format(mcolor(CCYAN,thisroom["name"],console.user["colors"]["enabled"]), thisroom["id"]))
-        else: console.msg(mcolor(CCYAN,thisroom["name"],console.user["colors"]["enabled"]))
+        else: console.msg(mcolor(CCYAN,thisroom["name"],console.user["colors"]))
         if console.user["builder"]["enabled"]: console.msg("Owned by: {0}".format(', '.join(thisroom["owners"])))
         if thisroom["desc"]:
             console.msg(thisroom["desc"])
@@ -75,11 +75,11 @@ def COMMAND(console, args):
                 if aex==len(userlist)-1: userlist[aex]="and "+userlist[aex]
                 elif aex==len(userlist)-2: userlist[aex]=userlist[aex]+" "
                 else: userlist[aex]=userlist[aex]+", " 
-            console.msg(mcolor(CYELLO,"\n{0} are here.".format("".join(userlist)),console.user["colors"]["enabled"]))
+            console.msg(mcolor(CYELLO,"\n{0} are here.".format("".join(userlist)),console.user["colors"]))
         elif len(userlist)==2:
-            console.msg(mcolor(CYELLO,"\n{0} are here.".format(" and ".join(userlist)),console.user["colors"]["enabled"]))
+            console.msg(mcolor(CYELLO,"\n{0} are here.".format(" and ".join(userlist)),console.user["colors"]))
         elif len(userlist)==1:
-            console.msg(mcolor(CYELLO,"\n{0} is here.".format(" ".join(userlist)),console.user["colors"]["enabled"]))
+            console.msg(mcolor(CYELLO,"\n{0} is here.".format(" ".join(userlist)),console.user["colors"]))
 
         # Build and show the item list.
         itemlist = []
@@ -97,7 +97,7 @@ def COMMAND(console, args):
                                   item=itemid)
                 console.msg("{0}: ERROR: Item referenced in this room does not exist: {1}".format(NAME, itemid))
         if itemlist:
-            console.msg(mcolor(CMAG,"Items: {0}.".format(", ".join(itemlist)),console.user["colors"]["enabled"]))
+            console.msg(mcolor(CMAG,"Items: {0}.".format(", ".join(itemlist)),console.user["colors"]))
 
         # Build and show the exit list.
         exitlist = []
@@ -114,9 +114,9 @@ def COMMAND(console, args):
                     else: exitlist[aex]=exitlist[aex]+", "
             elif (len(exitlist)==2):
                     exitlist.insert(1, " and ") 
-            console.msg(mcolor(CGRN,"You can go {0} from here.".format("".join(exitlist)),console.user["colors"]["enabled"]))
+            console.msg(mcolor(CGRN,"You can go {0} from here.".format("".join(exitlist)),console.user["colors"]))
         else:
-            console.msg(mcolor(CGRN,"No exits in this room. Make one or use `xyzzy` to return to the first room.",console.user["colors"]["enabled"]))
+            console.msg(mcolor(CGRN,"No exits in this room. Make one or use `xyzzy` to return to the first room.",console.user["colors"]))
         return True
 
     # There were arguments. Figure out what in the room they might be referring to.

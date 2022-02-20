@@ -333,9 +333,9 @@ def COMMAND(console, args):
             return False
 
         # Finished. Message the user, and echo the message to ourselves, if it wasn't a self-message.
-        console.shell.msg_user(args[1].lower(), mcolor(CBYELLO,"You hear a whisper in your mind: '{0}'".format(' '.join(args[2:])),targetuser["colors"]["enabled"]))
+        console.shell.msg_user(args[1].lower(), mcolor(CBYELLO,"You hear a whisper in your mind: '{0}'".format(' '.join(args[2:])),targetuser["colors"]))
         if targetuser["name"] != console.user["name"]:
-            console.msg(mcolor(CBYELLO,"You plant a message in the mind of {0}, that says: '{1}'".format(targetuser["name"], ' '.join(args[2:])),console.user["colors"]["enabled"]))
+            console.msg(mcolor(CBYELLO,"You plant a message in the mind of {0}, that says: '{1}'".format(targetuser["name"], ' '.join(args[2:])),console.user["colors"]))
         msg = "{0} focuses for a moment to perform a ritual.".format(console.user["nick"])
         console.shell.broadcast_room(console, msg)
         return True

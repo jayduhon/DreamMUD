@@ -47,6 +47,7 @@ def COMMAND(console, args):
 
     # Broadcast our message to the current room.
     args[0]=args[0].capitalize()
+    
     nick=console.database.user_by_name(console.user["name"])["nick"]
     mylang=console.database.user_by_name(console.user["name"])["lang"]
     emsg=encvigenere(' '.join(args),mylang)

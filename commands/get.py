@@ -72,7 +72,7 @@ def COMMAND(console, args):
             # The item is glued down. Only the owner or a wizard can pick it up.
             for uss in thisroom["users"]:
                 userconsole = console.shell.console_by_username(uss)
-                if userconsole["posture_item"]==target:
+                if userconsole["posture_item"]==thisitem["name"]:
                     console.msg("{0}: You cannot get this item.".format(NAME))
                     return False 
             if thisitem["glued"] and console.user["name"] not in thisitem["owners"] and not console.user["wizard"]:
