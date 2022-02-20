@@ -184,11 +184,11 @@ class Router:
                 continue
             if self.users[u]["service"] == "telnet":
                 if mtype=="announce": acolo = CBWHITE
-                self.telnet_factory.communicate(self.users[u]["console"].rname, mcolor(acolo,msg,ucolo=self.users[u]["console"].user["colors"]["enabled"]).encode())
+                self.telnet_factory.communicate(self.users[u]["console"].rname, mcolor(acolo,msg,ucolo=self.users[u]["console"].user["colors"]).encode())
             if self.users[u]["service"] == "websocket":
                 if mtype=="announce": acolo = CBWHITE
                 try: 
-                    self.websocket_factory.communicate(self.users[u]["console"].rname, html.escape(mcolor(acolo,msg,ucolo=self.users[u]["console"].user["colors"]["enabled"])).encode("utf-8"))
+                    self.websocket_factory.communicate(self.users[u]["console"].rname, html.escape(mcolor(acolo,msg,ucolo=self.users[u]["console"].user["colors"])).encode("utf-8"))
                 except:
                     print("Tried to send message to a closed websocket client.")
 
@@ -217,11 +217,11 @@ class Router:
                 else: amsg=msg
                 if self.users[u]["service"] == "telnet":
                     if mtype=="say": acolo = CBCYAN
-                    self.telnet_factory.communicate(self.users[u]["console"].rname, mcolor(acolo,amsg,ucolo=self.users[u]["console"].user["colors"]["enabled"]).encode())
+                    self.telnet_factory.communicate(self.users[u]["console"].rname, mcolor(acolo,amsg,ucolo=self.users[u]["console"].user["colors"]).encode())
                 if self.users[u]["service"] == "websocket":
                     if mtype=="say": acolo = CBCYAN
                     try:
-                        self.websocket_factory.communicate(self.users[u]["console"].rname, html.escape(mcolor(acolo,amsg,ucolo=self.users[u]["console"].user["colors"]["enabled"])).encode("utf-8"))
+                        self.websocket_factory.communicate(self.users[u]["console"].rname, html.escape(mcolor(acolo,amsg,ucolo=self.users[u]["console"].user["colors"])).encode("utf-8"))
                     except:
                         print("Tried to send message to a closed websocket client.")
 
