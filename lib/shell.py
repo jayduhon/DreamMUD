@@ -33,6 +33,7 @@ import sys
 
 from lib.logger import Logger
 from lib.color import *
+import unicodedata as ud
 
 import builtins
 from lib import common
@@ -43,7 +44,8 @@ COMMAND_DIR = "commands/"
 
 # A string list of all characters allowed in user commands.
 ALLOWED_CHARACTERS = string.ascii_letters + string.digits + string.punctuation + ' '
-
+# Whats the point of UTf-8 if we cant use it?
+DISALLOWED_CHARACTERS = "{}"
 
 class Shell:
     """Shell
@@ -183,9 +185,12 @@ class Shell:
         # Check for illegal characters, except in passwords.
         if line.split(' ')[0] not in ["register", "login", "password"]:
             for c in line:
-                if c not in ALLOWED_CHARACTERS:
+                if c in DISALLOWED_CHARACTERS:
                     console.msg("Command contains illegal characters.")
                     return None
+                #if c not in ALLOWED_CHARACTERS:
+                #    console.msg("Command contains illegal characters.")
+                #    return None
 
         # Split the command line into a list of arguments.
         line = line.split(' ')

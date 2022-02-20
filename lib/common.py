@@ -34,7 +34,7 @@ def split_list(lst, sep):
     return [i.strip() for i in ' '.join(lst).split(sep)]
 
 def check(NAME, console, args, argc=None, argmin=None, argmax=None, online=True, wizard=False,
-          usage=True, reason=True, spiritcost=None, spiritenabled=None):
+          usage=True, reason=True, awake=False, spiritcost=None, spiritenabled=None):
     """Perform simple checks.
 
     :param NAME: The NAME field from the command module.
@@ -54,15 +54,14 @@ def check(NAME, console, args, argc=None, argmin=None, argmax=None, online=True,
     """
     
     # People are awful so we need to check for garbage.
-    if len(args)>0:
-        invch = ''.join(args)
-        # These are allowed so remove.
-        invch=invch.strip('!.:?-()%/\"')
-        if invch.isalnum()==False:
-            console.log.error("Invalid character in: {name}",
-                              name=NAME)
-            console.msg("{0}: Invalid character.".format(NAME))
-            return None
+    #if len(args)>0:
+    #   These shouldnt be allowed.
+    #    invch=["{","}"]
+    #    if any(elem in args for elem in invch)==True:
+    #        console.log.error("Invalid character in: {name}",
+    #                          name=NAME)
+    #        console.msg("{0}: Invalid character.".format(NAME))
+    #        return None
     # End of invalid character check.
     
     # Make sure we didn't receive argc along with argmin or argmax, because that would be pointless.
@@ -125,6 +124,12 @@ def check(NAME, console, args, argc=None, argmin=None, argmax=None, online=True,
         if not console.user:
             if reason:
                 console.msg("{0}: You must be logged in first.".format(NAME))
+            return False
+
+    # Check for sleep/afk
+    if awake:
+        if console["posture"]=="sleeping":
+            console.msg("You are asleep, dreaming you could do things.")
             return False
 
     # Check if the calling user is a wizard. Otherwise, fail.
