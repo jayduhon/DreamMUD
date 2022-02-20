@@ -54,7 +54,28 @@ from twisted.conch.telnet import (
 
 from lib.mccp import *
 import zlib
-#IAC = chr(255)
+
+# negotiations for v1 and v2 of the protocol
+MCCP = bytes([86])  # b"\x56"
+MCCP2 = b"\x56"
+FLUSH = zlib.Z_SYNC_FLUSH
+
+
+def mccp_compress(protocol, data):
+    """
+    Handles zlib compression, if applicable.
+
+    Args:
+        data (str): Incoming data to compress.
+
+    Returns:
+        stream (binary): Zlib-compressed data.
+
+    """
+    if hasattr(protocol, "zlib"):
+        return protocol.zlib.compress(data) + protocol.zlib.flush(FLUSH)
+    return data
+
 # Read the motd file.
 try:
     with open("motd.telnet.txt") as f:
@@ -67,19 +88,21 @@ class ServerProtocol(LineReceiver):
     def __init__(self, factory):
         self.factory = factory
         self.peer = None
+        self.protocol_flags = {
+            "ENCODING": "utf-8",
+            "SCREENREADER": False,
+            "MCCP": False
+        }
         self._log = Logger("telnet")
+        self.mccp = False
 
     def connectionMade(self):
         p = self.transport.getPeer()
         self.peer = p.host + ':' + str(p.port)
         self.factory.register(self)
-        self.protocol_flags = {
-            "ENCODING": "utf-8",
-            "SCREENREADER": False,
-            "MCCP": True,
-        }
+        #self.mccp=False
         # MCCP start
-        #if self.protocol_flags["MCCP"]:
+        #if self.mccp==False:
         #    mccpstart=IAC+WILL+MCCP2
         #    self.factory.communicate(self.peer, mccpstart, cmd=True)
         #    self._log.info("Sending MCCP offer to: {peer}", peer=self.peer)
@@ -98,9 +121,18 @@ class ServerProtocol(LineReceiver):
         # MCCP start
         #if IAC+DO+MCCP2 in line:
         #    print("Client accepting to get mccp!")
+        #    self.mccp = True
+        #    self.zlib = zlib.compressobj(9)
         #    startmccp = IAC+SB+ MCCP2+ IAC+ SE
         #    self.factory.communicate(self.peer, startmccp, cmd=True)
         # MCCP end
+        #if IAC+DONT+MCCP2 in line:
+        #    print("Client wants to turn off mccp!")
+        #    if hasattr(self, "zlib"):
+        #        del self.zlib
+        #    self.mccp = False
+        #    stopmccp = IAC+SB+ MCCP2+ IAC+ SE
+        #    self.factory.communicate(self.peer, startmccp, cmd=True)
         passcheck = line.split(b' ')
         if passcheck[0] == b'login' and len(passcheck) > 2:
             passcheck = b' '.join(passcheck[:2] + [b'********'])
@@ -123,6 +155,7 @@ class ServerProtocol(LineReceiver):
 
         # Did we receive the quit pseudo-command?
         if line == "quit":
+            self.factory.communicate(self.peer, "Goodbye for now.".encode('utf-8'))
             self.transport.loseConnection()
             return
 
@@ -155,12 +188,18 @@ class ServerFactory(protocol.Factory):
             if c['client-peer'] == client.peer:
                 self.clients.remove(c)
 
-    def communicate(self, peer, payload, cmd=False):
+    def communicate(self, peer, payload, cmd=False, mccpe=False):
         client = None
         for c in self.clients:
             if c['client-peer'] == peer:
                 client = c['client']
         if client:
+            #mccpe=client.mccp
             # Telnet wants a CRLF instead of just an LF. Some clients require this to display properly.
-            if cmd: client.sendLine(payload)
-            else: client.sendLine(payload.decode('utf-8').replace('\n', '\r\n').encode('utf-8'))
+            #if mccpe: 
+            #    payload = mccp_compress(client,payload)
+            #    client.sendLine(payload)
+            #if cmd: 
+            #    client.sendLine(payload)
+            #else: 
+            client.sendLine(payload.decode('utf-8').replace('\n', '\r\n').encode('utf-8'))
