@@ -52,6 +52,17 @@ def check(NAME, console, args, argc=None, argmin=None, argmax=None, online=True,
 
     :return: True if succeeded, False if failed.
     """
+    
+    # People are awful so we need to check for garbage.
+    if len(args)>0:
+        invch = ''.join(args)
+        if invch.isalnum()==False:
+            console.log.error("Invalid character in: {name}",
+                              name=NAME)
+            console.msg("{0}: Invalid character.".format(NAME))
+            return None
+    # End of invalid character check.
+    
     # Make sure we didn't receive argc along with argmin or argmax, because that would be pointless.
     if argc is not None and (argmin is not None or argmax is not None):
         console.log.error("Detected argc along with argmin or argmax in COMMON.check from command: {name}",

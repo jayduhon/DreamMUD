@@ -21,15 +21,15 @@ CBWHITE=chr(27)+"[38;5;15m"
 #END OF COLORS
 
 def mcolor(col,msg,ucolo=None):
-    #Leaving the default color as it is.
+    # Leaving the default color as it is.
     if col=="default": return msg
-    if ucolo==True:
-        #We are checking user settings.
+    if ucolo["enabled"]==True:
+        # We are checking user settings.
         return col+msg+CRES
-    elif ucolo==False:
+    elif ucolo["enabled"]==False:
         return msg
     elif ucolo==None:
-        #User settings is not our business.
+        # User settings is not our business.
         return col+msg+CRES
     else:
         return msg
