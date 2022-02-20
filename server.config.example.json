@@ -14,15 +14,34 @@
   },
   "websocket": {
     "enabled": true,
-    "host": "yourhost.tld",
+    "host": "YOURHOST.TLD",
     "port": 37380,
     "secure": false,
     "key": "ssl/dennis.key",
     "cert": "ssl/dennis.cert"
   },
+  "mssp_info": {
+    "NAME": "YOUR MUDNAME", 
+    "HOSTNAME": "YOURDOMAIN.TLD",
+    "GMCP": -1,
+    "MCCP": -1,
+    "MINIMUM AGE": 16,
+    "CONTACT": "USERNAME@YOURDOMAIN.TLD",
+    "LOCATION": "YOURLOCATION",
+    "CREATED": "2022",
+    "GAMEPLAY": "Yume Nikki",
+    "GENRE": "Yume Nikki",
+    "SUBGENRE": "Yume Nikki",
+    "WEBSITE": "YOURDOMAIN.TLD",
+    "DISCORD": "https://discord.gg/YOURINVITE",
+    "LANGUAGE": "English",
+    "PORT": 37381
+  },
+
   "disabled": ["purge_exits", "purge_entrances"],
   "shutdown_delay": 30,
   "spiritenabled": false,
   "spiritrate": 1,
+  "nodesc": "Nothing unusual about that object.",
   "timegap": 60
 }

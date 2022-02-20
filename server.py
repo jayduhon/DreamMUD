@@ -41,6 +41,7 @@ from lib import logger
 from lib import shell
 from lib import telnet
 from lib import websocket
+from lib.config import VERSION
 from lib.color import *
 
 import builtins
@@ -49,6 +50,7 @@ import os
 import shutil
 import signal
 import traceback
+import time
 
 from datetime import datetime
 from twisted.internet import reactor, ssl, task
@@ -152,7 +154,6 @@ class Router:
         :param peer: Internal peer name.
         :param msg: Message to send.
         :param _nbsp: Will insert non-breakable spaces for formatting on the websocket frontend.
-        :param mtype: Message type. Announce, chat, say, message.
 
         :return: True
         """
@@ -200,7 +201,9 @@ class Router:
         :param room: Room ID.
         :param msg: Message to send.
         :param exclude: If set, username to exclude from broadcast.
-        :param mtype: Message type. Announce, chat, say, message.
+        :param mtype: Message type. Announce, chat, say, message, etc.
+        :param enmsg: Encoded message.
+        :param tlang: Target language the message was written in. 
 
         :return: True
         """
@@ -235,6 +238,7 @@ def init_services(config, router, log):
     if config["telnet"]["enabled"]:
         telnet_factory = telnet.ServerFactory(router)
         telnet_factory.protocol = telnet.ServerProtocol
+        telnet_factory.protocol._config=config
         reactor.listenTCP(config["telnet"]["port"], telnet_factory)
         any_enabled = True
 
@@ -346,9 +350,9 @@ def main():
     def shutdown(signal_received, frame):
         if not router.shutting_down:
             if config["shutdown_delay"]:
-                command_shell.broadcast("<<<DENNIS IS SHUTTING DOWN IN {0} SECONDS>>>".format(config["shutdown_delay"]))
+                command_shell.broadcast("<<< {0} IS SHUTTING DOWN IN {1} SECONDS >>>".format(config["mssp_info"]["NAME"].upper(),config["shutdown_delay"]))
             else:
-                command_shell.broadcast("<<<DENNIS IS SHUTTING DOWN>>>")
+                command_shell.broadcast("<<< {0} IS SHUTTING DOWN >>>".format(config["mssp_info"]["NAME"].upper()))
             reactor.callLater(config["shutdown_delay"], reactor.stop)
             router.shutting_down = True
     signal.signal(signal.SIGINT, shutdown)
@@ -363,7 +367,14 @@ def main():
 
     l = task.LoopingCall(timeflow)
     l.start(config["timegap"]) # call when specified in seconds
-
+    
+    # Set up some initial mssp configs so we can report them correctly.
+    config["mssp_info"]["CODEBASE"]=VERSION
+    config["mssp_info"]["PLAYERS"]=len(command_shell._database.users.all())
+    config["mssp_info"]["AREAS"]=len(command_shell._database.rooms.all())
+    config["mssp_info"]["UPTIME"]=int(time.time())
+    # End of mssp info fill.
+    
     # Start the Twisted Reactor.
     log.info("Finished startup tasks.")
     router._reactor = reactor
