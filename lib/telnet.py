@@ -58,10 +58,29 @@ import zlib
 # negotiations for v1 and v2 of the protocol
 MCCP = bytes([86])  # b"\x56"
 MCCP2 = b"\x56"
+MSSP = bytes([70])  # b"\x46"
+MSSP_VAR = bytes([1])  # b"\x01"
+MSSP_VAL = bytes([2])  # b"\x02"
+#MSSP = b"\x46"
+#MSSP_VAR = b"\x01"
+#MSSP_VAL = b"\x02"
 FLUSH = zlib.Z_SYNC_FLUSH
 
+def mssp_payload(config):
+    # Payload of MSSP data should respect:
+    # https://mudhalla.net/tintin/protocols/mssp/
+    mssp_table = config["mssp_info"]
+    varlist = b""
+    for variable, value in mssp_table.items():
+            varlist += (
+                MSSP_VAR + bytes(str(variable), "utf-8") + MSSP_VAL + bytes(str(value), "utf-8")
+            )
+    payload = IAC+SB+MSSP+varlist+IAC+SE
+    return payload
 
 def mccp_compress(protocol, data):
+    # MCCP zlib and IAC commands should respect:
+    # https://mudhalla.net/tintin/protocols/mccp/
     """
     Handles zlib compression, if applicable.
 
@@ -88,9 +107,11 @@ class ServerProtocol(LineReceiver):
     def __init__(self, factory):
         self.factory = factory
         self.peer = None
+        # Protocol flags for later.
         self.protocol_flags = {
             "ENCODING": "utf-8",
             "SCREENREADER": False,
+            "MSSP": False,
             "MCCP": False
         }
         self._log = Logger("telnet")
@@ -100,6 +121,7 @@ class ServerProtocol(LineReceiver):
         p = self.transport.getPeer()
         self.peer = p.host + ':' + str(p.port)
         self.factory.register(self)
+        
         #self.mccp=False
         # MCCP start
         #if self.mccp==False:
@@ -107,9 +129,15 @@ class ServerProtocol(LineReceiver):
         #    self.factory.communicate(self.peer, mccpstart, cmd=True)
         #    self._log.info("Sending MCCP offer to: {peer}", peer=self.peer)
         # MCCP end
+        
         self._log.info("Client connected: {peer}", peer=self.peer)
         if motd:
             self.factory.communicate(self.peer, motd.encode('utf-8'))
+        # MSSP stats
+        msspstart=IAC+WILL+MSSP
+        self.factory.communicate(self.peer, msspstart, cmd=True)
+        self._log.info("Sending MSSP offer to: {peer}", peer=self.peer)
+        # MSSP end
 
     def connectionLost(self, reason):
         self.factory.unregister(self)
@@ -117,6 +145,17 @@ class ServerProtocol(LineReceiver):
 
     def lineReceived(self, line):
         # Don't log passwords.
+        #print(line)
+        # MSSP request
+        if IAC+DONT+MSSP in line:
+            self._log.info("{peer} doesnt want MSSP so leave it alone.", peer=self.peer)
+        if IAC+DO+MSSP in line:
+            self._log.info("{peer} wants some stats on mssp! Sending it now.", peer=self.peer)
+            # Discard the command so the rest of the line still gets interpreted.
+            line=line.strip(IAC+DO+MSSP)
+            mssppayload = mssp_payload(self._config)
+            self.factory.communicate(self.peer, mssppayload, cmd=True)
+        # MSSP request end
         
         # MCCP start
         #if IAC+DO+MCCP2 in line:
@@ -125,7 +164,7 @@ class ServerProtocol(LineReceiver):
         #    self.zlib = zlib.compressobj(9)
         #    startmccp = IAC+SB+ MCCP2+ IAC+ SE
         #    self.factory.communicate(self.peer, startmccp, cmd=True)
-        # MCCP end
+        
         #if IAC+DONT+MCCP2 in line:
         #    print("Client wants to turn off mccp!")
         #    if hasattr(self, "zlib"):
@@ -133,6 +172,8 @@ class ServerProtocol(LineReceiver):
         #    self.mccp = False
         #    stopmccp = IAC+SB+ MCCP2+ IAC+ SE
         #    self.factory.communicate(self.peer, startmccp, cmd=True)
+        # MCCP end
+        
         passcheck = line.split(b' ')
         if passcheck[0] == b'login' and len(passcheck) > 2:
             passcheck = b' '.join(passcheck[:2] + [b'********'])
@@ -199,7 +240,7 @@ class ServerFactory(protocol.Factory):
             #if mccpe: 
             #    payload = mccp_compress(client,payload)
             #    client.sendLine(payload)
-            #if cmd: 
-            #    client.sendLine(payload)
-            #else: 
-            client.sendLine(payload.decode('utf-8').replace('\n', '\r\n').encode('utf-8'))
+            if cmd: 
+                client.sendLine(payload)
+            else: 
+                client.sendLine(payload.decode('utf-8').replace('\n', '\r\n').encode('utf-8'))

@@ -56,6 +56,8 @@ def check(NAME, console, args, argc=None, argmin=None, argmax=None, online=True,
     # People are awful so we need to check for garbage.
     if len(args)>0:
         invch = ''.join(args)
+        # These are allowed so remove.
+        invch=invch.strip('!.:?-()%/\"')
         if invch.isalnum()==False:
             console.log.error("Invalid character in: {name}",
                               name=NAME)
