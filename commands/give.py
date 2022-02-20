@@ -40,7 +40,7 @@ Ex2. `give 4 to Seisatsu Overlord`"""
 
 def COMMAND(console, args):
     # Perform initial checks.
-    if not COMMON.check(NAME, console, args, argmin=1):
+    if not COMMON.check(NAME, console, args, argmin=1, awake=True):
         return False
 
     # Lookup the current room.

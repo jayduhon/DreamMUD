@@ -24,7 +24,7 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 # **********
-
+import string
 NAME = "make room"
 CATEGORIES = ["rooms"]
 SCOST = 10
@@ -41,6 +41,15 @@ def COMMAND(console, args):
     # Perform initial checks.
     if not COMMON.check(NAME, console, args, argmin=1, spiritcost=SCOST, spiritenabled=CONFIG["spiritenabled"]):
         return False
+
+    # Allowed characters for names.
+    ALLOWED_CHARACTERS = string.ascii_letters + string.digits + '_' + ' '
+    # Check allowed characters.
+    for char in ''.join(args):
+        if char not in ALLOWED_CHARACTERS:
+            console.msg("{0}: Room names may contain alphanumerics, spaces and underscores only.".format(NAME))
+            return False
+
 
     # Make sure the room name is not an integer, as this would be confusing.
     # We actually want an exception to be raised here.

@@ -38,7 +38,7 @@ Ex. `xyzzy` to go to the first room."""
 
 def COMMAND(console, args):
     # Perform initial checks.
-    if not COMMON.check(NAME, console, args, argc=0):
+    if not COMMON.check(NAME, console, args, argc=0, awake=True):
         return False
 
     # Lookup the current room and perform room checks.

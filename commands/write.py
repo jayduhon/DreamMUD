@@ -40,7 +40,7 @@ Ex2. `write 4`"""
 
 def COMMAND(console, args):
     # Perform initial checks.
-    if not COMMON.check(NAME, console, args, argmin=2):
+    if not COMMON.check(NAME, console, args, argmin=2, awake=True):
         return False
 
     # Iterate through the args to split it into two
@@ -75,6 +75,7 @@ def COMMAND(console, args):
             # Only non-owners lose duplified items when writing them.
             if thisitem["message"]=="":
                 thisitem["message"]=thismessage
+                thisitem["mlang"]=console.user["lang"]
                 console.msg("You wrote {0} on {1}".format(thisitem["message"],COMMON.format_item(NAME, thisitem["name"])))
                 console.shell.broadcast_room(console, "{0} writes something on {1}.".format(
                         console.user["nick"], COMMON.format_item(NAME, thisitem["name"])))

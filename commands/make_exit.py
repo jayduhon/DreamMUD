@@ -24,7 +24,7 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 # **********
-
+import string
 NAME = "make exit"
 CATEGORIES = ["exits"]
 SCOST = 10
@@ -39,11 +39,17 @@ Wizards can create an exit to anywhere in any room.
 
 Ex. `make exit 12 Iron Door` to make an exit in the current room called "Iron Door" leading to room 12."""
 
-
 def COMMAND(console, args):
     # Perform initial checks.
     if not COMMON.check(NAME, console, args, argmin=2, spiritcost=SCOST, spiritenabled=CONFIG["spiritenabled"]):
         return False
+    # Allowed characters for names.
+    ALLOWED_CHARACTERS = string.ascii_letters + string.digits + '_' + ' '
+    # Check allowed characters.
+    for char in ''.join(args):
+        if char not in ALLOWED_CHARACTERS:
+            console.msg("{0}: Exit names may contain alphanumerics, spaces and underscores only.".format(NAME))
+            return False
 
     # Perform argument type checks and casts.
     destroomid = COMMON.check_argtypes(NAME, console, args, checks=[[0, int]], retargs=0)

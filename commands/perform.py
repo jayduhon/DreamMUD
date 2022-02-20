@@ -37,13 +37,20 @@ DESCRIPTION = """Perform the ritual called <ritual>.
 
 Current rituals: telepathy, identify, reveal, seer, ghost, cleanse.
 
+TELEPATHY can send someone an anonymous message.
+IDENTIFY can show you additional information about an object.
+REVEAL can reveal hidden things in a room.
+SEER can show you information about the location of someone.
+GHOST can hide you almost completely for continual spirit cost.
+CLEANSE can cleanse someone and the cursed items they have.
+
 Ex. `perform telepathy seisatsu Hello there!`
 Ex1. `perform reveal`"""
 
 
 def COMMAND(console, args):
     # Perform initial checks.
-    if not COMMON.check(NAME, console, args, argmin=1):
+    if not COMMON.check(NAME, console, args, argmin=1, awake=True):
         return False
 
     #elif args[0]=="force":
@@ -55,7 +62,7 @@ def COMMAND(console, args):
         #if thisreceiver==console.user["name"] or thisreceiver==console.user["nick"] or thisreceiver==console.user["nick"].lower():
         #    console.msg("Can't cleanse yourself.")
         #    return False        
-        if not COMMON.check(NAME, console, args, argmin=2, spiritcost=SCOST, spiritenabled=CONFIG["spiritenabled"]):
+        if not COMMON.check(NAME, console, args, argmin=2, spiritcost=SCOST, spiritenabled=CONFIG["spiritenabled"], awake=True):
             return False
 
         thisreceiver = ' '.join(args[1:])
@@ -68,8 +75,17 @@ def COMMAND(console, args):
                 return COMMAND(console,["cleanse"]+partial)
             console.msg("{0}: No such user in this room.".format(NAME))
             return False
-        
-        msg = "{0} focuses on {1} for a moment.".format(console.user["nick"],targetuser["nick"])
+        if console.user["name"]==targetuser["name"]:
+            if console.user["pronouns"]=="male":
+                msg = "{0} focuses on himself for a moment.".format(console.user["nick"])
+            elif console.user["pronouns"]=="female":
+                msg = "{0} focuses on herself for a moment.".format(console.user["nick"])
+            elif console.user["pronouns"]=="neutral":
+                msg = "{0} focuses on themself for a moment.".format(console.user["nick"])
+            else:
+                msg = "{0} focuses on {1}self for a moment.".format(console.user["nick"],console.user["pronouno"])
+        else:
+            msg = "{0} focuses on {1} for a moment.".format(console.user["nick"],targetuser["nick"])
         console.shell.broadcast_room(console, msg)
         
         for it in targetuser["inventory"]:
@@ -77,15 +93,18 @@ def COMMAND(console, args):
             if thisitem["cursed"]["enabled"]:
                 thisitem["cursed"]["enabled"]=False
                 console.database.upsert_item(thisitem)
-                console.shell.msg_user(targetuser["name"],"{0} cleansed some of your items.".format(console.user["nick"]))
-                if targetuser["pronouns"]=="male":
-                    console.msg("You cleansed some of his items.")
-                elif targetuser["pronouns"]=="female":
-                    console.msg("You cleansed some of her items.")
-                elif targetuser["pronouns"]=="neutral":
-                    console.msg("You cleansed some of their items.")
+                if not console.user["name"]==targetuser["name"]:
+                    console.shell.msg_user(targetuser["name"],"{0} cleansed some of your items.".format(console.user["nick"]))
+                    if targetuser["pronouns"]=="male":
+                        console.msg("You cleansed some of his items.")
+                    elif targetuser["pronouns"]=="female":
+                        console.msg("You cleansed some of her items.")
+                    elif targetuser["pronouns"]=="neutral":
+                        console.msg("You cleansed some of their items.")
+                    else:
+                        console.msg("You cleansed some of {0} items.".format(targetuser["pronouno"]))
                 else:
-                    console.msg("You cleansed some of {0} items.".format(targetuser["pronouno"]))
+                    console.msg("You cleansed some of your items.")
         return True
 
     elif args[0]=="seer":

@@ -24,7 +24,7 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 # **********
-
+import string
 NAME = "make item"
 CATEGORIES = ["items"]
 SCOST = 10
@@ -36,11 +36,19 @@ You will be added as an owner of the new item.
 
 Ex. `make item Crystal Ball`"""
 
-
 def COMMAND(console, args):
     # Perform initial checks.
     if not COMMON.check(NAME, console, args, argmin=1, spiritcost=SCOST, spiritenabled=CONFIG["spiritenabled"]):
         return False
+
+    # Allowed characters for names.
+    ALLOWED_CHARACTERS = string.ascii_letters + string.digits + '_' + ' ' 
+    # Check allowed characters.
+    for char in ''.join(args):
+        if char not in ALLOWED_CHARACTERS:
+            console.msg("{0}: Item names may contain alphanumerics, spaces and underscores only.".format(NAME))
+            return False
+
 
     # Make sure the item name is not an integer, as this would be confusing.
     # We actually want an exception to be raised here.

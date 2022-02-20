@@ -40,7 +40,7 @@ Ex2. `load a coffee into the large chest`"""
 def COMMAND(console, args):
 
     # Perform initial checks.
-    if not COMMON.check(NAME, console, args, argmin=3):
+    if not COMMON.check(NAME, console, args, argmin=3, awake=True):
         return False
 
     # Iterate through the args to split it into two

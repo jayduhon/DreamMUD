@@ -42,7 +42,7 @@ Ex2. `read 4`"""
 
 def COMMAND(console, args):
     # Perform initial checks.
-    if not COMMON.check(NAME, console, args, argmin=1):
+    if not COMMON.check(NAME, console, args, argmin=1, awake=True):
         return False
 
     # Get item name/id.

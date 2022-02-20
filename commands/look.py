@@ -47,7 +47,7 @@ Ex5. `examine crys` to look at the item "crystal ball"."""
 
 def COMMAND(console, args):
     # Perform initial checks.
-    if not COMMON.check(NAME, console, args):
+    if not COMMON.check(NAME, console, args, awake=True):
         return False
 
     # Lookup the current room and perform room checks.

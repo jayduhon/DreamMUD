@@ -39,7 +39,7 @@ Ex2. `unload a coffee from the large chest`"""
 def COMMAND(console, args):
 
     # Perform initial checks.
-    if not COMMON.check(NAME, console, args, argmin=3):
+    if not COMMON.check(NAME, console, args, argmin=3, awake=True):
         return False
 
     args=COMMON.split_list(args,"from")
