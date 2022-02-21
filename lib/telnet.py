@@ -149,6 +149,7 @@ class ServerProtocol(LineReceiver):
         # MSSP request
         if IAC+DONT+MSSP in line:
             self._log.info("{peer} doesnt want MSSP so leave it alone.", peer=self.peer)
+            line=line.strip(IAC+DONT+MSSP)
         if IAC+DO+MSSP in line:
             self._log.info("{peer} wants some stats on mssp! Sending it now.", peer=self.peer)
             # Discard the command so the rest of the line still gets interpreted.
