@@ -679,9 +679,10 @@ def posture(NAME, console, pname=None, action=None, pitem=None):
     """
     # If no extra arguments were given, stand up.
     if not pname:
+        if console["posture"] == "sleeping": console.msg("You stand up.")
         console["posture"] = None
         console["posture_item"] = None
-        console.shell.broadcast_room(console, "{0} stands up.".format(console.user["nick"]))
+        console.shell.broadcast_room(console, "{0} stands up.".format(console.user["nick"]),exclude=console.user["name"])
         return True
 
     # Make sure if we have pname, we also have action.
@@ -694,6 +695,7 @@ def posture(NAME, console, pname=None, action=None, pitem=None):
     elif pname and not pitem:
         console["posture"] = pname
         console["posture_item"] = None
+        if pname == "sleeping": console.msg("You go to sleep.")
         console.shell.broadcast_room(console, "{0} {1}.".format(console.user["nick"], action))
         return True
 
@@ -718,11 +720,11 @@ def posture(NAME, console, pname=None, action=None, pitem=None):
             console["posture"] = pname
             console["posture_item"] = item["name"]
             if pitem.lower().startswith("a ") or pitem.lower().startswith("an ") or pitem.lower().startswith("the "):
-                console.shell.broadcast_room(console, "{0} {1} on {2}.".format(console.user["nick"], action,
-                                                                               item["name"]))
+                console.shell.broadcast_room(console, "{0} {1} on {2}.".format(console.user["nick"], action, item["name"]))
+                if pname == "sleeping": console.msg("You are {0} on {1} now.".format(pname,item["name"]))
             else:
-                console.shell.broadcast_room(console, "{0} {1} on the {2}.".format(console.user["nick"], action,
-                                                                                   item["name"]))
+                console.shell.broadcast_room(console, "{0} {1} on the {2}.".format(console.user["nick"], action, item["name"]))
+                if pname == "sleeping": console.msg("You are {0} on the {1} now.".format(pname,item["name"]))
 
             # Finished.
             return True

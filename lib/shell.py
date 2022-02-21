@@ -393,7 +393,7 @@ class Shell:
         self.router.broadcast_all(message, exclude, mtype)
         return True
 
-    def broadcast_room(self, console, message, exclude=None, mtype=None, enmsg=None, tlang=None):
+    def broadcast_room(self, console, message, exclude=None, excludelist=None, mtype=None, enmsg=None, tlang=None):
         """Broadcast Message to Room
 
         Send a message to all users who are in the same room as the user connected to this console.
@@ -406,7 +406,7 @@ class Shell:
         :return: True
         """
         self._log.info(message)
-        self.router.broadcast_room(console.user["room"], message, exclude, mtype, enmsg, tlang)
+        self.router.broadcast_room(console.user["room"], message, exclude, excludelist, mtype, enmsg, tlang)
         return True
     
     def updatespirit(self):
@@ -416,23 +416,32 @@ class Shell:
                     if self.router.users[u]["console"].user["ghost"]:
                             self.router.users[u]["console"].user["spirit"]-=15
                     if self.router.users[u]["console"].user["spirit"]<=0:
+                        # Not enough spirit to keep being a ghost.
                         if self.router.users[u]["console"].user["ghost"]:
                             self.router.users[u]["console"].user["ghost"]=False
-                            self.broadcast_room(self.router.users[u]["console"],"{0} is visible again.".format(self.router.users[u]["console"].user["nick"]))
+                            self.broadcast_room(self.router.users[u]["console"],"{0} is visible again.".format(self.router.users[u]["console"].user["nick"]),exclude=self.router.users[u]["console"].user["name"])
                             self.router.users[u]["console"].msg("You are visible again.")
                         self.router.users[u]["console"].user["spirit"]=0
                     if self.router.users[u]["console"].user["spirit"]<100:
+                        # Bool if they are cursed or not by an item.
                         cursed = False
+                        # Bool if they are asleep and an item will move them.
+                        willport= False
                         # Iterate through inventory to see if they are cursed.
                         for it in self.router.users[u]["console"].user["inventory"]+self.router.users[u]["console"].user["equipment"]:
                             it2 = self.router.users[u]["console"].database.item_by_id(it)
                             if it2["cursed"]["enabled"]: cursed = True
-                        # You can hide cursed items in a container for now.
+                            #if it2["whirlpool"]["enabled"]: willport = True
+                        # Only gain spirit if we are not cursed.
                         if cursed == False:
                             self.router.users[u]["console"].user["spirit"]+=CONFIG["spiritrate"]
                             self.router.users[u]["console"].msg("You regain some spirit.")
                         else:
                             self.router.users[u]["console"].msg("Something keeps you from gaining spirit.")
+                        # Do a random roll and see if we will move.
+                        if willport == True:
+                            # Not implemented yet
+                            pass
                     elif self.router.users[u]["console"].user["spirit"]>100: 
                         self.router.users[u]["console"].user["spirit"]=100
                     self.router.users[u]["console"].database.upsert_user(self.router.users[u]["console"].user) 
