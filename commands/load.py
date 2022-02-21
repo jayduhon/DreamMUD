@@ -43,6 +43,9 @@ def COMMAND(console, args):
     if not COMMON.check(NAME, console, args, argmin=3, awake=True):
         return False
 
+    if "into" not in args:
+        console.msg("{0}: {1}".format(NAME,USAGE))
+        return False
     # Iterate through the args to split it into two
     args=COMMON.split_list(args,"into")
     thisitemname=args[0]

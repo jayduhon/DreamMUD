@@ -47,7 +47,9 @@ def COMMAND(console, args):
     #thisroom = COMMON.check_room(NAME, console)
     #if not thisroom:
     #    return False
-
+    if "to" not in args:
+        console.msg("{0}: {1}".format(NAME,USAGE))
+        return False
     # Iterate through the args to split it into two
     args=COMMON.split_list(args,"to")
     thisitemname=args[0]

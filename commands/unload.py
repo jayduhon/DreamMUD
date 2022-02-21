@@ -42,6 +42,10 @@ def COMMAND(console, args):
     if not COMMON.check(NAME, console, args, argmin=3, awake=True):
         return False
 
+    if "from" not in args:
+        console.msg("{0}: {1}".format(NAME,USAGE))
+        return False
+    
     args=COMMON.split_list(args,"from")
     thisitemname=args[0]
     thiscontainername=args[1]
