@@ -30,6 +30,7 @@ import importlib.util
 import os
 import string
 import sys
+import random
 
 from lib.logger import Logger
 from lib.color import *
@@ -409,46 +410,90 @@ class Shell:
         self.router.broadcast_room(console.user["room"], message, exclude, excludelist, mtype, enmsg, tlang)
         return True
     
+    def moveplayer(self,console,towhere):
+        targetuser=console.user
+        destroom = COMMON.check_room("update", console, towhere)
+        thisroom = COMMON.check_room("update", console, console.user["room"])
+        # The telekey is paired to a nonexistent room. Report and ignore it.
+        if not destroom:
+            console.msg("ERROR: Tried to teleport a sleeper into a nonexistent room!")
+            console.log.error("Tried to teleport a sleeper into a nonexistent room!")
+
+        # Proceed with teleportation.
+        if console["posture_item"]: console["posture_item"]=""
+        
+        # Remove us from the current room.
+        if targetuser["name"] in thisroom["users"]:
+            thisroom["users"].remove(targetuser["name"])
+
+        # Add us to the destination room.
+        if targetuser["name"] not in destroom["users"]:
+            destroom["users"].append(targetuser["name"])
+
+        # Broadcast our teleportation to the origin room.
+        console.shell.broadcast_room(console, "{0} vanished from the room.".format(targetuser["nick"]))
+
+        # Set our current room to the new room.
+        targetuser["room"] = destroom["id"]
+
+        # Broadcast our arrival to the destination room, but not to ourselves.
+        console.shell.broadcast_room(console, "{0} appeared.".format(targetuser["nick"]))
+
+        # Save the origin room, the destination room, and our user document.
+        console.database.upsert_room(thisroom)
+        console.database.upsert_room(destroom)
+        console.database.upsert_user(targetuser)
+
+        # Update console's exit list.
+        console.exits = []
+        for exi in range(len(destroom["exits"])):
+            console.exits.append(destroom["exits"][exi]["name"])
+        return True
+    
     def updatespirit(self):
         for u in self.router.users:
             if self.router.users[u]["console"].user and self.router.users[u]["console"].user["wizard"]==False:
-                try:
+                #if not self.router.users[u]["console"].user["spirit"]:
+                #    self.router.users[u]["console"].user["spirit"]=1
+                if self.router.users[u]["console"].user["ghost"]:
+                        self.router.users[u]["console"].user["spirit"]-=15
+                if self.router.users[u]["console"].user["spirit"]<=0:
+                    # Not enough spirit to keep being a ghost.
                     if self.router.users[u]["console"].user["ghost"]:
-                            self.router.users[u]["console"].user["spirit"]-=15
-                    if self.router.users[u]["console"].user["spirit"]<=0:
-                        # Not enough spirit to keep being a ghost.
-                        if self.router.users[u]["console"].user["ghost"]:
-                            self.router.users[u]["console"].user["ghost"]=False
-                            self.broadcast_room(self.router.users[u]["console"],"{0} is visible again.".format(self.router.users[u]["console"].user["nick"]),exclude=self.router.users[u]["console"].user["name"])
-                            self.router.users[u]["console"].msg("You are visible again.")
-                        self.router.users[u]["console"].user["spirit"]=0
-                    if self.router.users[u]["console"].user["spirit"]<100:
-                        # Bool if they are cursed or not by an item.
-                        cursed = False
-                        # Bool if they are asleep and an item will move them.
-                        willport= False
-                        # Iterate through inventory to see if they are cursed.
-                        for it in self.router.users[u]["console"].user["inventory"]+self.router.users[u]["console"].user["equipment"]:
-                            it2 = self.router.users[u]["console"].database.item_by_id(it)
-                            if it2["cursed"]["enabled"]: cursed = True
-                            #if it2["whirlpool"]["enabled"]: willport = True
-                        # Only gain spirit if we are not cursed.
-                        if cursed == False:
-                            self.router.users[u]["console"].user["spirit"]+=CONFIG["spiritrate"]
-                            self.router.users[u]["console"].msg("You regain some spirit.")
-                        else:
-                            self.router.users[u]["console"].msg("Something keeps you from gaining spirit.")
-                        # Do a random roll and see if we will move.
-                        if willport == True:
-                            # Not implemented yet
-                            pass
-                    elif self.router.users[u]["console"].user["spirit"]>100: 
-                        self.router.users[u]["console"].user["spirit"]=100
-                    self.router.users[u]["console"].database.upsert_user(self.router.users[u]["console"].user) 
-                except:
+                        self.router.users[u]["console"].user["ghost"]=False
+                        self.broadcast_room(self.router.users[u]["console"],"{0} is visible again.".format(self.router.users[u]["console"].user["nick"]),exclude=self.router.users[u]["console"].user["name"])
+                        self.router.users[u]["console"].msg("You are visible again.")
                     self.router.users[u]["console"].user["spirit"]=0
-                    self.router.users[u]["console"].msg("You start to gain some spirit.")
-                    self.router.users[u]["console"].database.upsert_user(self.router.users[u]["console"].user) 
+                if self.router.users[u]["console"].user["spirit"]<100:
+                    # Bool if they are cursed or not by an item.
+                    cursed = False
+                    # Bool if they are asleep and an item will move them.
+                    ported= False
+                    # Iterate through inventory to see if they are cursed.
+                    for it in self.router.users[u]["console"].user["inventory"]+self.router.users[u]["console"].user["equipment"]:
+                        it2 = self.router.users[u]["console"].database.item_by_id(it)
+                        if it2["cursed"]["enabled"]: cursed = True
+                        if CONFIG["telekey_sport"]>0 and it2["telekey"]!=self.router.users[u]["console"].user["room"]:
+                            if it2["telekey"] and self.router.users[u]["console"]["posture"]=="sleeping" and ported==False:
+                                # Do a random roll and see if we will move.
+                                if(random.randint(1,CONFIG["telekey_sport"])==1):
+                                    self.router.users[u]["console"].msg("You dream of your {0}.".format(it2["name"]))
+                                    self.moveplayer(self.router.users[u]["console"],it2["telekey"])
+                                    ported=True
+                            #if it2["whirlpool"]["enabled"]: willport = True
+                    # Only gain spirit if we are not cursed.
+                    if cursed == False:
+                        self.router.users[u]["console"].user["spirit"]+=CONFIG["spiritrate"]
+                        if self.router.users[u]["console"]["posture"]!="sleeping": self.router.users[u]["console"].msg("You regain some spirit.")
+                    else:
+                        if self.router.users[u]["console"]["posture"]!="sleeping": self.router.users[u]["console"].msg("You shiver for a moment.")
+                elif self.router.users[u]["console"].user["spirit"]>100: 
+                    self.router.users[u]["console"].user["spirit"]=100
+                self.router.users[u]["console"].database.upsert_user(self.router.users[u]["console"].user) 
+                #except:
+                #    self.router.users[u]["console"].user["spirit"]=0
+                #    self.router.users[u]["console"].msg("You start to gain some spirit.")
+                #    self.router.users[u]["console"].database.upsert_user(self.router.users[u]["console"].user) 
         return True
 
     def user_by_name(self, username):
