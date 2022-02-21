@@ -54,7 +54,6 @@ def COMMAND(console, args):
     # If no arguments were given, and we aren't sitting down already, sit on the floor.
     if not args:
         return COMMON.posture(NAME, console, "sleeping", "goes to sleep")
-
     # Arguments were given. Make sure the player didn't try to sit on an item by its ID instead of its name.
     try:
         int(' '.join(args))

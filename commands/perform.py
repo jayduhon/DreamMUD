@@ -43,6 +43,7 @@ REVEAL can reveal hidden things in a room.
 SEER can show you information about the location of someone.
 GHOST can hide you almost completely for continual spirit cost.
 CLEANSE can cleanse someone and the cursed items they have.
+WHIRLPOOL can teleport an asleep player to a random room.
 
 Ex. `perform telepathy seisatsu Hello there!`
 Ex1. `perform reveal`"""
@@ -56,8 +57,79 @@ def COMMAND(console, args):
     #elif args[0]=="force":
     #    console.msg("Not implemented yet.")
     #    return False
+    #print(args)
+    if args[0]=="whirlpool":
+        SCOST=5
+        # Make sure the named user exists, is online, and is in the same room as us.
+        thisreceiver=' '.join(args[1:])
+        #print(thisreceiver)
+        targetuser = COMMON.check_user(NAME, console, thisreceiver, room=True, online=True, live=True, reason=False,
+                                   wizardskip=["room", "online"])
+        if not targetuser:
+            # Check for a partial user match, and try running again if there's just one.
+            partial = COMMON.match_partial(NAME, console, thisreceiver.lower(), "user")
+            if partial:
+                partial=["whirlpool"]+partial
+                return COMMAND(console, partial)
+            console.msg("{0}: No such user in this room.".format(NAME))
+            return False
 
-    if args[0]=="cleanse":
+        # Found the user, wake them up!
+        userconsole = console.shell.console_by_username(targetuser["name"])
+        if not userconsole:
+            return False
+        elif userconsole["posture"]=="sleeping":
+            console.shell.broadcast_room(console,"{0} whispers some words in the ears of {1}.".format(console.user["nick"],targetuser["nick"]))
+            if userconsole["posture_item"]: userconsole["posture_item"]=""
+            destroom=random.choice(console.database.rooms.all())
+            #destroom = COMMON.check_room(NAME, console, roomsc)
+            thisroom = COMMON.check_room(NAME, console, console.user["room"])
+            # The telekey is paired to a nonexistent room. Report and ignore it.
+            if not destroom:
+                console.msg("{0}: ERROR: Tried to teleport a sleeper into a nonexistent room!".format(NAME))
+                console.log.error("Tried to teleport a sleeper into a nonexistent room!")
+
+            # Proceed with teleportation.
+            else:
+                # Remove us from the current room.
+                if targetuser["name"] in thisroom["users"]:
+                    thisroom["users"].remove(targetuser["name"])
+
+                # Add us to the destination room.
+                if targetuser["name"] not in destroom["users"]:
+                    destroom["users"].append(targetuser["name"])
+
+                # Broadcast our teleportation to the origin room.
+                console.shell.broadcast_room(console, "{0} vanished from the room.".format(targetuser["nick"]))
+
+                # Set our current room to the new room.
+                targetuser["room"] = destroom["id"]
+
+                # Broadcast our arrival to the destination room, but not to ourselves.
+                console.shell.broadcast_room(userconsole, "{0} appeared.".format(targetuser["nick"]))
+
+                # Save the origin room, the destination room, and our user document.
+                console.database.upsert_room(thisroom)
+                console.database.upsert_room(destroom)
+                console.database.upsert_user(targetuser)
+
+                # Update console's exit list.
+                userconsole.exits = []
+                for exi in range(len(destroom["exits"])):
+                    userconsole.exits.append(destroom["exits"][exi]["name"])
+
+                # Take a look around.
+                # console.shell.command(console, "look", False)
+        else:
+            if userconsole.user["pronouns"]=="male":
+                console.msg("He is not asleep.")
+            elif userconsole.user["pronouns"]=="female":
+                console.msg("She is not asleep.")
+            elif userconsole.user["pronouns"]=="neutral":
+                console.msg("They are not asleep.")
+            else: console.msg("{0} is not asleep.".format(userconsole.user["pronouns"].capitalize()))
+            return False
+    elif args[0]=="cleanse":
         SCOST=5
         #if thisreceiver==console.user["name"] or thisreceiver==console.user["nick"] or thisreceiver==console.user["nick"].lower():
         #    console.msg("Can't cleanse yourself.")
@@ -185,7 +257,7 @@ def COMMAND(console, args):
 
     elif args[0]=="identify":
         # Spirit cost of identify.
-        SCOST=5
+        SCOST=2
         found_something = False
         partials = []
         target=' '.join(args[1:])

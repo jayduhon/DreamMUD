@@ -44,20 +44,23 @@ def COMMAND(console, args):
         return False
 
     # Lookup the current room.
-    thisroom = COMMON.check_room(NAME, console)
-    if not thisroom:
-        return False
+    #thisroom = COMMON.check_room(NAME, console)
+    #if not thisroom:
+    #    return False
 
     # Iterate through the args to split it into two
-    thisitemname=[]
-    thisreceiver=[]
-    sw=0
-    for ar in args:
-        if ar=="to": sw=1
-        elif sw==0: thisitemname.append(ar)
-        elif sw==1: thisreceiver.append(ar)
-    thisitemname=' '.join(thisitemname)
-    thisreceiver=' '.join(thisreceiver)
+    args=COMMON.split_list(args,"to")
+    thisitemname=args[0]
+    thisreceiver=args[1]
+    #thisitemname=[]
+    #thisreceiver=[]
+    #sw=0
+    #for ar in args:
+    #    if ar=="to": sw=1
+    #    elif sw==0: thisitemname.append(ar)
+    #    elif sw==1: thisreceiver.append(ar)
+    #thisitemname=' '.join(thisitemname)
+    #thisreceiver=' '.join(thisreceiver)
 
     # Get item name/id.
     target = thisitemname.lower()

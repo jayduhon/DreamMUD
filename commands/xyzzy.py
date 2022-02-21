@@ -65,10 +65,9 @@ def COMMAND(console, args):
 
     # Set our current room to the new room.
     console.user["room"] = destroom["id"]
-
-    # Broadcast our arrival to the destination room, but not to ourselves.
-    console.shell.broadcast_room(console, "{0} appeared.".format(console.user["nick"]),
-                                 exclude=console.user["name"])
+    
+    # Broadcast our arrival to the destination room, but not to ourselves or sleepers.
+    console.shell.broadcast_room(console, "{0} appeared.".format(console.user["nick"]))
 
     # Save the origin room, the destination room, and our user document.
     console.database.upsert_room(thisroom)
@@ -80,8 +79,8 @@ def COMMAND(console, args):
     for exi in range(len(destroom["exits"])):
         console.exits.append(destroom["exits"][exi]["name"])
 
-    # Take a look around.
-    console.shell.command(console, "look", False)
-
+    # If autolook is enabled, look.
+    if console.user["autolook"]["enabled"]:
+        console.shell.command(console, "look", False)
     # Finished.
     return True

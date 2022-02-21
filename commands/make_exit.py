@@ -27,9 +27,9 @@
 import string
 NAME = "make exit"
 CATEGORIES = ["exits"]
-SCOST = 10
+SCOST = 5
 ALIASES = ["create exit", "new exit"]
-USAGE = "make exit <destination> <exit_name>"
+USAGE = "make exit <destination ID> <exit_name>"
 DESCRIPTION = """Create a new exit called <exit_name> in the current room, leading to the room with ID <destination>.
 
 The current room must not be outbound sealed, and the destination room must not be inbound sealed.

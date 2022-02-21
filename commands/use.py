@@ -99,6 +99,11 @@ def COMMAND(console, args):
             action = "{0} used {1}.".format(console.user["nick"], COMMON.format_item(NAME, itemref["name"]))
             console.shell.broadcast_room(console, action)
 
+        # The item teaches a language.
+        if itemref["lang"] is not None:
+            console.user["lang"]=itemref["lang"]
+            console.database.upsert_user(console.user)
+
         # The item is a telekey. Prepare for teleportation.
         if itemref["telekey"] is not None:
             # Lookup the destination room and perform room checks.

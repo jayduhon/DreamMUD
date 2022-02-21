@@ -27,7 +27,7 @@
 import string
 NAME = "make item"
 CATEGORIES = ["items"]
-SCOST = 10
+SCOST = 5
 ALIASES = ["create item", "new item"]
 USAGE = "make item <item_name>"
 DESCRIPTION = """Create a new item called <item_name> and place it in your inventory.
