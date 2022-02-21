@@ -23,13 +23,10 @@
   "mssp_info": {
     "NAME": "YOUR MUDNAME", 
     "HOSTNAME": "YOURDOMAIN.TLD",
-    "GMCP": -1,
     "MCCP": -1,
-    "MINIMUM AGE": 16,
     "CONTACT": "USERNAME@YOURDOMAIN.TLD",
     "LOCATION": "YOURLOCATION",
     "CREATED": "2022",
-    "GAMEPLAY": "Yume Nikki",
     "GENRE": "Yume Nikki",
     "SUBGENRE": "Yume Nikki",
     "WEBSITE": "YOURDOMAIN.TLD",

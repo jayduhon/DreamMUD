@@ -193,7 +193,7 @@ class Router:
                 except:
                     print("Tried to send message to a closed websocket client.")
 
-    def broadcast_room(self, room, msg, exclude=None, mtype=None, enmsg=None,tlang=None):
+    def broadcast_room(self, room, msg, exclude=None, excludelist=None, mtype=None, enmsg=None,tlang=None):
         """Broadcast Room
 
         Broadcast a message to all logged in users in the given room.
@@ -201,6 +201,7 @@ class Router:
         :param room: Room ID.
         :param msg: Message to send.
         :param exclude: If set, username to exclude from broadcast.
+        :param excludelist: Like above but several names.
         :param mtype: Message type. Announce, chat, say, message, etc.
         :param enmsg: Encoded message.
         :param tlang: Target language the message was written in. 
@@ -208,11 +209,22 @@ class Router:
         :return: True
         """
         #Default color for any message.
-        acolo="default" 
+        acolo="default"
+        #print(excludelist)
         for u in self.users:
             if not self.users[u]["console"].user:
                 continue
             if self.users[u]["console"].user["name"] == exclude:
+                continue
+            # Excludelist if we need it later.
+            #try:
+            #    if self.users[u]["console"].user["name"] in excludelist:
+            #        continue
+            #except:
+            #    pass
+            
+            # Exclude sleepers from room broadcasts.
+            if self.users[u]["console"]["posture"] == "sleeping":
                 continue
             if self.users[u]["console"].user["room"] == room:
                 mylang=self.users[u]["console"].database.user_by_name(self.users[u]["console"].user["name"])["lang"]
