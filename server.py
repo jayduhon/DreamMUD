@@ -28,6 +28,7 @@
 # Parts of codebase borrowed from https://github.com/TKeesh/WebSocketChat
 
 import sys
+import re
 
 # Check Python version.
 if sys.version_info[0] != 3:
@@ -41,6 +42,7 @@ from lib import logger
 from lib import shell
 from lib import telnet
 from lib import websocket
+from lib.markov import *
 from lib.config import VERSION
 from lib.color import *
 
@@ -341,6 +343,22 @@ def main():
             dbman._unlock()
         return 3
     log.info("Finished initializing database manager.")
+
+    # Initialize the Database Manager and load the dream database.
+    #log.info("Initializing random dreams...")
+    # Cleaning up. First [] stuff.
+    #pattern= r'\[[^]]*\]'
+    # Then digits.
+    #pattern2=r'\d+'
+    #with open('dennis.server.log', 'r') as file:
+    #    msg = file.read().replace('\n', '')
+    #mod_msg = re.sub(pattern, '', msg )
+    #mod_msg = re.sub(pattern2, '', mod_msg )
+    #mod_msg = ''.join(ch for ch in mod_msg if ch.isalpha() or ch==' ')
+    #model=build_model(mod_msg, 20)
+    #mod_msg=generate_text(model, 20, 20)
+    #config["randomdreams"]["filename"]
+    #log.info("Finished initializing random dreams.")
 
     # Initialize the router.
     router = Router(config, dbman)
