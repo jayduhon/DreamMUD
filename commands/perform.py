@@ -80,7 +80,6 @@ def COMMAND(console, args):
             return False
         elif userconsole["posture"]=="sleeping":
             console.shell.broadcast_room(console,"{0} whispers some words in the ears of {1}.".format(console.user["nick"],targetuser["nick"]))
-            if userconsole["posture_item"]: userconsole["posture_item"]=""
             destroom=random.choice(console.database.rooms.all())
             #destroom = COMMON.check_room(NAME, console, roomsc)
             thisroom = COMMON.check_room(NAME, console, console.user["room"])
@@ -91,6 +90,7 @@ def COMMAND(console, args):
 
             # Proceed with teleportation.
             else:
+                if userconsole["posture_item"]: userconsole["posture_item"]=""
                 # Remove us from the current room.
                 if targetuser["name"] in thisroom["users"]:
                     thisroom["users"].remove(targetuser["name"])

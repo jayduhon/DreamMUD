@@ -36,12 +36,12 @@ DESCRIPTION = "List all of the items in your inventory."
 
 def COMMAND(console, args):
     # Perform initial checks.
-    if not COMMON.check(NAME, console, args, argc=0):
+    if not COMMON.check(NAME, console, args, argc=0, awake=True):
         return False
 
     # Check if our inventory is empty.
     if not console.user["equipment"]:
-        console.msg("{0}: You are not holding anything.".format(NAME))
+        console.msg("You are not holding anything.")
     
     # Holding items
     if console.user["equipment"]:
@@ -51,7 +51,7 @@ def COMMAND(console, args):
 
     # Check if our inventory is empty.
     if not console.user["inventory"]:
-        console.msg("{0}: Your inventory is empty.".format(NAME))
+        console.msg("Your inventory is empty.")
        
     # Enumerate our inventory.
     itemcount = 0

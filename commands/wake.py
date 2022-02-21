@@ -91,8 +91,5 @@ def COMMAND(console, args):
         else: console.msg("{0} is not asleep.".format(userconsole.user["pronouns"].capitalize()))
         return False
     
-    # If autolook is enabled, look.
-    if console.user["autolook"]["enabled"]:
-        console.shell.command(console, "look", False)
     # Finished.
     return True

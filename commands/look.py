@@ -58,7 +58,7 @@ def COMMAND(console, args):
     # There were no arguments, so just look at the current room.
     if len(args) == 0:
         # Show the room name, ID, owners, and description.
-        if console.user["builder"]["enabled"]: console.msg("{0} (ID: {1})".format(mcolor(CCYAN,thisroom["name"],console.user["colors"]["enabled"]), thisroom["id"]))
+        if console.user["builder"]["enabled"]: console.msg("{0} (ID: {1})".format(mcolor(CCYAN,thisroom["name"],console.user["colors"]),thisroom["id"]))
         else: console.msg(mcolor(CCYAN,thisroom["name"],console.user["colors"]))
         if console.user["builder"]["enabled"]: console.msg("Owned by: {0}".format(', '.join(thisroom["owners"])))
         if thisroom["desc"]:
