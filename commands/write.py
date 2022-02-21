@@ -34,25 +34,27 @@ DESCRIPTION = """Write the message <note> on the item called <item>.
 You may use a full or partial item name, or the item ID. 
 You need to hold something to read and write.
 
-Ex. `write crystal ball`
-Ex2. `write 4`"""
+Ex. `write Wow crystal! on ball`
+Ex2. `write This stinks. on 4`"""
 
-
+# this should be changed asap to work with "" or any escape character
+# because right now you cant use the word on in the message itself.
 def COMMAND(console, args):
     # Perform initial checks.
     if not COMMON.check(NAME, console, args, argmin=2, awake=True):
         return False
 
     # Iterate through the args to split it into two
-    thisitemname=[]
-    thismessage=[]
-    sw=0
-    for ar in args:
-        if ar=="on": sw=1
-        elif sw==0: thismessage.append(ar)
-        elif sw==1: thisitemname.append(ar)
-    thisitemname=' '.join(thisitemname)
-    thismessage=' '.join(thismessage)
+    args=COMMON.split_list(args,"on")
+    thisitemname=args[1]
+    thismessage=args[0]
+    #sw=0
+    #for ar in args:
+    #    if ar=="on": sw=1
+    #    elif sw==0: thismessage.append(ar)
+    #    elif sw==1: thisitemname.append(ar)
+    #thisitemname=' '.join(thisitemname)
+    #thismessage=' '.join(thismessage)
 
     # Get item name/id.
     target = thisitemname.lower()
@@ -78,7 +80,7 @@ def COMMAND(console, args):
                 thisitem["mlang"]=console.user["lang"]
                 console.msg("You wrote {0} on {1}".format(thisitem["message"],COMMON.format_item(NAME, thisitem["name"])))
                 console.shell.broadcast_room(console, "{0} writes something on {1}.".format(
-                        console.user["nick"], COMMON.format_item(NAME, thisitem["name"])))
+                        console.user["nick"], COMMON.format_item(NAME, thisitem["name"])),exclude=console.user["name"])
                 console.database.upsert_item(thisitem)
             else:
                 console.msg("There is something written on that already.")

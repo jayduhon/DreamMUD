@@ -71,7 +71,7 @@ def COMMAND(console, args):
                     emsg=encvigenere(thisitem["message"],thisitem["mlang"])
                 console.msg("You read '{0}' on {1}".format(emsg,COMMON.format_item(NAME, thisitem["name"])))
                 console.shell.broadcast_room(console, "{0} reads something on {1}.".format(
-                        console.user["nick"], COMMON.format_item(NAME, thisitem["name"])))
+                        console.user["nick"], COMMON.format_item(NAME, thisitem["name"])),exclude=console.user["name"])
                 return True
             else:
                 console.msg("There is nothing written on that.")
