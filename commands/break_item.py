@@ -63,6 +63,10 @@ def COMMAND(console, args):
                     user["console"].user["inventory"].remove(itemid)
                     user["console"].msg("{0} vanished from your inventory.".format(thisitem["name"]))
                     console.database.upsert_user(user["console"].user)
+                if itemid in user["console"].user["equipment"]:
+                    user["console"].user["equipment"].remove(itemid)
+                    user["console"].msg("{0} vanished from your hands.".format(thisitem["name"]))
+                    console.database.upsert_user(user["console"].user)
             except:
                 with open('break_item_trap.txt', 'w') as file:
                     file.write("itemid: {0}, u: {1}".format(str(itemid), user))

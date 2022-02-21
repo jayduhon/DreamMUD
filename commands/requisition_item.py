@@ -74,7 +74,7 @@ def COMMAND(console, args):
         # If the item is in a container's inventory, remove it.
         for cont in console.database.items.all():
             if cont["container"]["enabled"]:
-                if itemid in cont["inventory"]:
+                if itemid in cont["container"]["inventory"]:
                     cont["container"]["inventory"].remove(itemid)
                     console.database.upsert_item(cont)
         

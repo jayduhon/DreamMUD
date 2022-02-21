@@ -156,7 +156,8 @@ def COMMAND(console, args):
             # Some message about our spirit. Currently just the number.
             if console.user["spirit"] and not console.user["wizard"]: 
                 console.msg("Your current spirit seems to be at {0}%.".format(str(console.user["spirit"])))
-
+            else:
+                console.msg("Your spirit is completely depleted.")
             # Holding stuff
             if len(console.user["equipment"])>0:
                 #Currently only 1 item is supported

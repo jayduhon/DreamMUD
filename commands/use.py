@@ -55,7 +55,7 @@ def COMMAND(console, args):
     thisroom = COMMON.check_room(NAME, console)
     if not thisroom:
         return False
-
+    print(target)
     # Search for the item in our inventory.
     for itemid in console.user["inventory"]:
         thisitem = console.database.item_by_id(itemid)
