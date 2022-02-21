@@ -38,6 +38,7 @@
   "disabled": ["purge_exits", "purge_entrances"],
   "shutdown_delay": 30,
   "spiritenabled": false,
+  "telekey_sport": 3,
   "spiritrate": 1,
   "nodesc": "Nothing unusual about that object.",
   "timegap": 60
