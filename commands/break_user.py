@@ -29,7 +29,7 @@ NAME = "break user"
 CATEGORIES = ["wizard"]
 ALIASES = ["delete user", "destroy user", "remove user"]
 USAGE = "break user <username>"
-DESCRIPTION = """Break the user with name <username>.
+DESCRIPTION = """(WIZARDS ONLY) Break the user with name <username>.
 
 Or rather deletes a user. All ownership will be deleted, unowned items will be owned by <world>.
 
@@ -64,10 +64,9 @@ def COMMAND(console, args):
             else: thisroom["owners"].remove(targetuser["name"])
             
             for exitid in thisroom["exits"]:
-                if targetuser["name"] in thisroom["exits"][exitid]["owners"]:
-                    if len(thisroom["exits"][exitid]["owners"])<2: thisroom["exits"][exitid]["owners"]=["<world>"]
-                    else: thisroom["exits"][exitid]["owners"].remove(targetuser["name"])
-                
+                if targetuser["name"] in exitid["owners"]:
+                    if len(exitid["owners"])<2: exitid["owners"]=["<world>"]
+                    else: exitid["owners"].remove(targetuser["name"])
             console.database.upsert_room(thisroom)
 
     # If the room contains items, return them to their primary owners.
