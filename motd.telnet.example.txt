@@ -1,4 +1,4 @@
-Welcome to Zschokkei (DennisMUD).
+Welcome to DennisMUD (DennisMUD).
 
 In this game, you use in-game commands to create the content. All content is user-created.
 
