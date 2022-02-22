@@ -4,7 +4,7 @@ Dennis is a MUD (Multi-User Dungeon, aka a multi-player text adventure) and coll
 
 A public test instance is generally kept running. Access it with the web client at http://play.dennismud.xyz/ or via telnet at the same host on port 37380.
 
-This fork's public test instance can be accessed at http://molylepke.hu/mud.html or via telnet at mud.molylepke.hu on port 37381.
+This fork's public test instance can be accessed at http://mud.molylepke.hu (Use http://molylepke.hu/mud.html if it fails) or via telnet at mud.molylepke.hu on port 37381.
 
 Defaults Configuration
 ======================
