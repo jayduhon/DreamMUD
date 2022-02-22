@@ -23,21 +23,91 @@ html {
   100%{background-position:0% 50%}
 }
 
+#main_box {
+  text-align: center;
+  margin: auto;
+  margin-top: 10px;
+  margin-bottom: 15px;
+  padding: 5px;
+  background: linear-gradient(90deg, #c49292, #d8b7b6, #ebdbdb, #c49292);
+	background-size: 400% 400%;
+	animation: AnimationName 10s linear infinite;
+	-webkit-animation: AnimationName 10s linear infinite;
+  -moz-animation: AnimationName 10s linear infinite;
+  -o-animation: AnimationName 10s linear infinite;
+  color: #000;
+  height: 65%;
+  width: 50%;
+  border: 2px solid #d9ad7c;
+  overflow: auto;
+  box-shadow: 7px 7px;
+}
+
+/* CSS */
+.button-50 {
+  appearance: button;
+  background-color: #000;
+  background-image: none;
+  border: 1px solid #000;
+  border-radius: 4px;
+  box-shadow: #fff 4px 4px 0 0,#000 4px 4px 0 1px;
+  box-sizing: border-box;
+  font-family: monospace;
+  font-size: 12pt;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  line-height: 20px;
+  margin: 0 5px 10px 0;
+  overflow: visible;
+  padding: 8px 40px;
+  text-align: center;
+  text-transform: none;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.button-50:focus {
+  text-decoration: none;
+}
+
+.button-50:hover {
+  text-decoration: none;
+}
+
+.button-50:active {
+  box-shadow: rgba(0, 0, 0, .125) 0 3px 5px inset;
+  outline: 0;
+}
+
+.button-50:not([disabled]):active {
+  box-shadow: #fff 2px 2px 0 0, #000 2px 2px 0 1px;
+  transform: translate(2px, 2px);
+}
+
+@media (min-width: 768px) {
+  .button-50 {
+    padding: 8px 40px;
+  }
+}
+
 #chat_box {
   text-align: left;
   margin: auto;
   margin-top: 10px;
   margin-bottom: 15px;
   padding: 5px;
-  background: linear-gradient(90deg, #fff2df, #d9ad7c, #fff2df, #d9ad7c);
+  background: linear-gradient(90deg, #c49292, #d8b7b6, #ebdbdb, #c49292);
 	background-size: 400% 400%;
-	animation: AnimationName 20s linear infinite;
-	-webkit-animation: AnimationName 20s linear infinite;
-  -moz-animation: AnimationName 20s linear infinite;
-  -o-animation: AnimationName 20s linear infinite;
-  background-color: #fff2df;
-  color: #402020;
-  height: 90%;
+	animation: AnimationName 10s linear infinite;
+	-webkit-animation: AnimationName 10s linear infinite;
+  -moz-animation: AnimationName 10s linear infinite;
+  -o-animation: AnimationName 10s linear infinite;
+  color: #000;
+  height: 80%;
   width: 95%;
   border: 2px solid #d9ad7c;
   overflow: auto;
@@ -50,14 +120,14 @@ html {
   margin: auto;
 }
 #input {
-  background: linear-gradient(90deg, #fff2df, #d9ad7c, #fff2df, #d9ad7c);
+  background: linear-gradient(90deg, #c49292, #d8b7b6, #ebdbdb, #c49292);
 	background-size: 400% 400%;
-	animation: AnimationName 20s linear infinite;
-	-webkit-animation: AnimationName 20s linear infinite;
-  -moz-animation: AnimationName 20s linear infinite;
-  -o-animation: AnimationName 20s linear infinite;
+	animation: AnimationName 10s linear infinite;
+	-webkit-animation: AnimationName 10s linear infinite;
+  -moz-animation: AnimationName 10s linear infinite;
+  -o-animation: AnimationName 10s linear infinite;
+  color: #000;
   border: 2px solid #d9ad7c;
-  color: #402020;
   padding: 5px;
   width: 95%;
   height: auto;
@@ -71,7 +141,7 @@ form.console {
   height: auto;
 }
 body {
-	background: #674d3c;
+	background: #4b2928;
   height: 95%;
   font-family: monospace;
   font-size: 12pt;

@@ -9,14 +9,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Zschokkei (Dennis MUD)</title>
+    <title>Dennis MUD</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" media="screen" href="style.css"/>
 </head>
 <body>
     <div id="container">
         <div id="supported"></div>
-        <div id="chat_box">Welcome to public test instance of Zschokkei (DennisMUD), running <a title="GitHub" href="https://github.com/zbylyrcxr/DennisMUD">Dennis</a>.<br/>
+        <div id="chat_box">Welcome to Molylepke MUD, running <a title="GitHub" href="https://github.com/zbylyrcxr/DennisMUD">Dennis</a>.<br/>
             This is experimental software. If something goes wrong, try refreshing the page.<br/>
             <br/>
             In this game, you use in-game commands to create the content. All content is user-created.<br/>
@@ -26,6 +26,7 @@
             <br/>
             Important commands for the casual player include "look", "go", "say", "action", "chat", and "use".<br/>
             Read the help pages for the other commands listed by "help" to get started making content.<br/>
+            Check out the "perform" command for the currently available rituals, miracles.<br/>
             <br/>
             Using the "help" command by itself will list command categories.<br/>
             Using "help" on a category will list the commands in that category.<br/>
@@ -39,11 +40,27 @@
         <hr>
         <div style="text-align: center;"><form class="console">
             <input id="input" autofocus="autofocus"/>
+            
         </form></div>
         <br/>
+        <table style="width:100%">
+            <tr>
+              <th><button type="submit" id="shortcut1" class="button-50" role="button" value="look me">Look at myself</button></th>
+              <th><button type="submit" id="shortcut2" class="button-50" role="button" value="inventory">Inventory</button></th>
+              <th><button type="submit" id="shortcut3" class="button-50" role="button" value="look">Look around</button></th>
+              <th><button type="submit" id="shortcut4" class="button-50" role="button" value="help all">General help</button></th>
+              <th><button type="submit" id="shortcut5" class="button-50" role="button" value="list users">Who is online</button></th>
+            </tr>
+        </table>
     </div>
     <script type="text/javascript">
-        var host = "yourhost.tld";
+
+        myAudio = new Audio('YOURBACKGROUNDMUSIC.FILEXTENSION');
+        myAudio.loop = true;
+        myAudio.volume = 0.1;
+        myAudio.play();
+
+        var host = "YOURDOMAIN.TLD";
         var port = 37380;
         var secure = false;
 
@@ -53,18 +70,39 @@
                     var mySocket = new WebSocket("wss://"+host+":"+port+"/ws");
                 else
                     var mySocket = new WebSocket("ws://"+host+":"+port+"/ws");
-                mySocket.onmessage = function (event) {
+                    mySocket.onmessage = function (event) {
                     var output = document.getElementById("chat_box");
                     output.innerHTML = output.innerHTML + event.data + '<br/><br/>'
                     output.scrollTop = output.scrollHeight;
                 };
+
                 var form = document.getElementsByClassName("console");
                 var input = document.getElementById("input");
+                var short1 = document.getElementById("shortcut1");
+                var short2 = document.getElementById("shortcut2");
+                var short3 = document.getElementById("shortcut3");
+                var short4 = document.getElementById("shortcut4");
+                var short5 = document.getElementById("shortcut5");
                 form[0].addEventListener("submit", function (e) {
                     input_text = input.value;
                     input.value = "";
                     mySocket.send(input_text);
                     e.preventDefault();
+                })
+                short1.addEventListener("click", function (e) {
+                    mySocket.send(short1.value);
+                })
+                short2.addEventListener("click", function (e) {
+                    mySocket.send(short2.value);
+                })
+                short3.addEventListener("click", function (e) {
+                    mySocket.send(short3.value);
+                })
+                short4.addEventListener("click", function (e) {
+                    mySocket.send(short4.value);
+                })
+                short5.addEventListener("click", function (e) {
+                    mySocket.send(short5.value);
                 })
             });
         }
