@@ -679,7 +679,7 @@ def posture(NAME, console, pname=None, action=None, pitem=None):
     """
     # If no extra arguments were given, stand up.
     if not pname:
-        if console["posture"] == "sleeping": console.msg("You stand up.")
+        console.msg("You stand up.")
         console["posture"] = None
         console["posture_item"] = None
         console.shell.broadcast_room(console, "{0} stands up.".format(console.user["nick"]),exclude=console.user["name"])
