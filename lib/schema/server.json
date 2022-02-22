@@ -27,7 +27,7 @@
         },
         "level": {
           "type": "string",
-          "pattern": "^(debug|info|warning|error|critical)$"
+          "pattern": "^(debug|info|warn|error|critical)$"
         }
       },
       "required": [
