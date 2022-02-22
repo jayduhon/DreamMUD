@@ -9,7 +9,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Dennis MUD</title>
+    <title>YOURMUDNAME</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" media="screen" href="style.css"/>
 </head>
@@ -55,7 +55,7 @@
     </div>
     <script type="text/javascript">
 
-        myAudio = new Audio('YOURBACKGROUNDMUSIC.FILEXTENSION');
+        myAudio = new Audio('YOURBGM.EXTENSION');
         myAudio.loop = true;
         myAudio.volume = 0.1;
         myAudio.play();
@@ -77,6 +77,8 @@
                 };
 
                 var form = document.getElementsByClassName("console");
+                const cmdhistory = [];
+                var cmdpointer = 0;
                 var input = document.getElementById("input");
                 var short1 = document.getElementById("shortcut1");
                 var short2 = document.getElementById("shortcut2");
@@ -85,9 +87,24 @@
                 var short5 = document.getElementById("shortcut5");
                 form[0].addEventListener("submit", function (e) {
                     input_text = input.value;
+                    cmdhistory.push(input_text);
+                    if (cmdhistory.length>20) cmdhistory.shift();
                     input.value = "";
                     mySocket.send(input_text);
                     e.preventDefault();
+                })
+                form[0].addEventListener("keydown", function (e) {
+                    var code = e.which || e.keyCode;
+                    if (code=='38') {
+                        if (cmdpointer>0) cmdpointer=cmdpointer-1;
+                        else cmdpointer=cmdhistory.length-1
+                        if (cmdhistory.length>0) input.value=cmdhistory[cmdpointer];
+                    }
+                    if (code=='40') {
+                        if (cmdpointer<cmdhistory.length-1) cmdpointer=cmdpointer+1;
+                        else cmdpointer=0
+                        if (cmdhistory.length>0) input.value=cmdhistory[cmdpointer];
+                    }
                 })
                 short1.addEventListener("click", function (e) {
                     mySocket.send(short1.value);
