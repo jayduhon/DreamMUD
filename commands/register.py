@@ -27,6 +27,7 @@
 
 import hashlib
 import string
+import lib.rectable as rectable
 
 NAME = "register"
 CATEGORIES = ["users"]
@@ -104,10 +105,10 @@ def COMMAND(console, args):
         }
     }
     console.database.upsert_user(newuser)
-
+    recovery=rectable.encode(recovery)
     # Confirm the registration, and give recovery code.
     console.msg("Registered user \"{0}\".".format(newuser["name"]))
-    console.msg("Your account recovery code is \"{0}\". Please write it down.".format(recovery))
-    console.msg("If you lose your password, you can use `recover <username> <code> <newpass>` to change it.")
+    console.msg("Your account recovery phrase is \"{0}\". Please write it down.".format(' '.join(recovery)))
+    console.msg("If you lose your password, you can use `recover <username> <phrase> <newpass>` to change it.")
     console.msg("Otherwise, you will have to contact the administrator of this server.")
     return True
