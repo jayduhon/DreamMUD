@@ -54,7 +54,7 @@ def COMMAND(console, args):
 
     # remake the exit.
     thisroom["exits"][exitid]["desc"] = ""
-    thisroom["exits"][exitid]["owners"] = [user.console["name"]]
+    thisroom["exits"][exitid]["owners"] = [console.user["name"]]
     thisroom["exits"][exitid]["key"] = None
     thisroom["exits"][exitid]["key_hidden"] = True
     thisroom["exits"][exitid]["locked"] = False
