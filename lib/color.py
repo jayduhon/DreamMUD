@@ -21,6 +21,14 @@ CBWHITE=chr(27)+"[38;5;15m"
 #END OF COLORS
 
 def mcolor(col,msg,ucolo=None):
+    """
+        M(ake_)color function
+
+        :param col: Variable name of the color to apply. "default" for default color.
+        :param msg: The message to apply color to.
+        :param ucolo: Whether to check if user has colors enabled.
+        
+    """
     # Leaving the default color as it is.
     if col=="default": return msg
     if ucolo["enabled"]==True:
