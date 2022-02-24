@@ -41,7 +41,7 @@ Ex. `make exit 12 Iron Door` to make an exit in the current room called "Iron Do
 
 def COMMAND(console, args):
     # Perform initial checks.
-    if not COMMON.check(NAME, console, args, argmin=2, spiritcost=SCOST, spiritenabled=CONFIG["spiritenabled"]):
+    if not COMMON.check(NAME, console, args, argmin=2, spiritcost=SCOST):
         return False
     # Allowed characters for names.
     ALLOWED_CHARACTERS = string.ascii_letters + string.digits + '_' + ' '

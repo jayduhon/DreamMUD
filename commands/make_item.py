@@ -38,7 +38,7 @@ Ex. `make item Crystal Ball`"""
 
 def COMMAND(console, args):
     # Perform initial checks.
-    if not COMMON.check(NAME, console, args, argmin=1, spiritcost=SCOST, spiritenabled=CONFIG["spiritenabled"]):
+    if not COMMON.check(NAME, console, args, argmin=1, spiritcost=SCOST):
         return False
 
     # Allowed characters for names.

@@ -26,6 +26,7 @@
 # **********
 
 NAME = "xyzzy"
+SCOST=5
 CATEGORIES = ["exploration"]
 USAGE = "xyzzy"
 DESCRIPTION = """Teleport back to the first room.
@@ -38,7 +39,7 @@ Ex. `xyzzy` to go to the first room."""
 
 def COMMAND(console, args):
     # Perform initial checks.
-    if not COMMON.check(NAME, console, args, argc=0, awake=True):
+    if not COMMON.check(NAME, console, args, argc=0, awake=True, spiritcost=SCOST):
         return False
 
     # Lookup the current room and perform room checks.

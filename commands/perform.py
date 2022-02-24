@@ -60,6 +60,8 @@ def COMMAND(console, args):
     #print(args)
     if args[0]=="whirlpool":
         SCOST=5
+        if not COMMON.check(NAME, console, args, argmin=2, spiritcost=SCOST, awake=True):
+            return False
         # Make sure the named user exists, is online, and is in the same room as us.
         thisreceiver=' '.join(args[1:])
         #print(thisreceiver)
@@ -134,7 +136,7 @@ def COMMAND(console, args):
         #if thisreceiver==console.user["name"] or thisreceiver==console.user["nick"] or thisreceiver==console.user["nick"].lower():
         #    console.msg("Can't cleanse yourself.")
         #    return False        
-        if not COMMON.check(NAME, console, args, argmin=2, spiritcost=SCOST, spiritenabled=CONFIG["spiritenabled"], awake=True):
+        if not COMMON.check(NAME, console, args, argmin=2, spiritcost=SCOST, awake=True):
             return False
 
         thisreceiver = ' '.join(args[1:])
@@ -182,7 +184,7 @@ def COMMAND(console, args):
     elif args[0]=="seer":
         # Spirit cost of telepathy.
         SCOST=5
-        if not COMMON.check(NAME, console, args, argmin=2, spiritcost=SCOST, spiritenabled=CONFIG["spiritenabled"]):
+        if not COMMON.check(NAME, console, args, argmin=2, spiritcost=SCOST):
             return False
         thisreceiver = ' '.join(args[1:])
         # Make sure the named user exists and is online.
@@ -206,7 +208,7 @@ def COMMAND(console, args):
     
     elif args[0]=="ghost":
         SCOST=50
-        if not COMMON.check(NAME, console, args, argmax=1, spiritcost=SCOST, spiritenabled=CONFIG["spiritenabled"]):
+        if not COMMON.check(NAME, console, args, argmax=1, spiritcost=SCOST):
             return False
         if console.user["ghost"]:
             console.user["spirit"]+=50
@@ -222,7 +224,7 @@ def COMMAND(console, args):
         
     elif args[0]=="reveal":
         SCOST=5
-        if not COMMON.check(NAME, console, args, argmax=1, spiritcost=SCOST, spiritenabled=CONFIG["spiritenabled"]):
+        if not COMMON.check(NAME, console, args, argmax=1, spiritcost=SCOST):
             return False
         msg = "{0} tries to reveal hidden things with a ritual.".format(console.user["nick"])
         console.shell.broadcast_room(console, msg)
@@ -261,7 +263,7 @@ def COMMAND(console, args):
         found_something = False
         partials = []
         target=' '.join(args[1:])
-        if not COMMON.check(NAME, console, args, argmin=2, spiritcost=SCOST, spiritenabled=CONFIG["spiritenabled"]):
+        if not COMMON.check(NAME, console, args, argmin=2, spiritcost=SCOST):
             return False
                         
         # Lookup the current room and perform room checks.
@@ -415,7 +417,7 @@ def COMMAND(console, args):
     elif args[0]=="telepathy":
         # Spirit cost of telepathy.
         SCOST=5
-        if not COMMON.check(NAME, console, args, argmin=3, spiritcost=SCOST, spiritenabled=CONFIG["spiritenabled"]):
+        if not COMMON.check(NAME, console, args, argmin=3, spiritcost=SCOST):
             return False
         
         # Make sure the named user exists and is online.
