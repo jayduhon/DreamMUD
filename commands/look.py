@@ -160,9 +160,13 @@ def COMMAND(console, args):
                 console.msg("Your spirit is completely depleted.")
             # Holding stuff
             if len(console.user["equipment"])>0:
-                #Currently only 1 item is supported
-                hitem = console.database.item_by_id(console.user["equipment"][0])
-                console.msg("\nYou are holding {0}.".format(COMMON.format_item(NAME, hitem["name"])))
+                hitemlist=[]
+                for hitem in console.user["equipment"]:
+                    hitem = console.database.item_by_id(hitem)
+                    hitemlist.append("{0}".format(COMMON.format_item(NAME, hitem["name"])))
+                hitemlist=' and '.join(hitemlist)
+                console.msg("You are holding {0}.".format(hitemlist))
+                #console.msg("\nYou are holding {0}.".format(COMMON.format_item(NAME, hitem["name"])))
                     
             
             # If we are sitting or laying down, format a message saying so after the description.
@@ -355,9 +359,13 @@ def COMMAND(console, args):
                 
                 # Holding stuff
                 if len(user["equipment"])>0:
-                    #Currently only 1 item is supported
-                    hitem = console.database.item_by_id(user["equipment"][0])
-                    console.msg("\nShe is holding {0}.".format(COMMON.format_item(NAME, hitem["name"])))   
+                    #Currently only 2 items are supported
+                    hitemlist=[]
+                    for hitem in user["equipment"]:
+                        hitem = console.database.item_by_id(hitem)
+                        hitemlist.append("{0}".format(COMMON.format_item(NAME, hitem["name"])))
+                    hitemlist=' and '.join(hitemlist)
+                    console.msg("\nShe is holding {0}.".format(hitemlist))   
                 
                 if userconsole["posture"] and userconsole["posture_item"]:
                     console.msg("\nShe is {0} on {1}.".format(userconsole["posture"],
@@ -366,9 +374,12 @@ def COMMAND(console, args):
                     console.msg("\nShe is {0}.".format(userconsole["posture"]))
             elif user["pronouns"] == "male":
                 if len(user["equipment"])>0:
-                    #Currently only 1 item is supported
-                    hitem = console.database.item_by_id(user["equipment"][0])
-                    console.msg("\nHe is holding {0}.".format(COMMON.format_item(NAME, hitem["name"])))
+                    hitemlist=[]
+                    for hitem in user["equipment"]:
+                        hitem = console.database.item_by_id(hitem)
+                        hitemlist.append("{0}".format(COMMON.format_item(NAME, hitem["name"])))
+                    hitemlist=' and '.join(hitemlist)
+                    console.msg("\nHe is holding {0}.".format(hitemlist))
                 
                 if userconsole["posture"] and userconsole["posture_item"]:
                     console.msg("\nHe is {0} on {1}.".format(userconsole["posture"],
@@ -377,9 +388,12 @@ def COMMAND(console, args):
                     console.msg("\nHe is {0}.".format(userconsole["posture"]))
             elif user["pronouns"] == "neutral":
                 if len(user["equipment"])>0:
-                    #Currently only 1 item is supported
-                    hitem = console.database.item_by_id(user["equipment"][0])
-                    console.msg("\nThey are holding {0}.".format(COMMON.format_item(NAME, hitem["name"])))
+                    hitemlist=[]
+                    for hitem in user["equipment"]:
+                        hitem = console.database.item_by_id(hitem)
+                        hitemlist.append("{0}".format(COMMON.format_item(NAME, hitem["name"])))
+                    hitemlist=' and '.join(hitemlist)
+                    console.msg("\nThey are holding {0}.".format(hitemlist))
                 
                 if userconsole["posture"] and userconsole["posture_item"]:
                     console.msg("\nThey are {0} on {1}.".format(userconsole["posture"],
@@ -388,9 +402,12 @@ def COMMAND(console, args):
                     console.msg("\nThey are {0}.".format(userconsole["posture"]))
             else:
                 if len(user["equipment"])>0:
-                    #Currently only 1 item is supported
-                    hitem = console.database.item_by_id(user["equipment"][0])
-                    console.msg("\n{0} is holding {1}.".format(user["pronouns"].capitalize(),COMMON.format_item(NAME, hitem["name"])))
+                    hitemlist=[]
+                    for hitem in user["equipment"]:
+                        hitem = console.database.item_by_id(hitem)
+                        hitemlist.append("{0}".format(COMMON.format_item(NAME, hitem["name"])))
+                    hitemlist=' and '.join(hitemlist)
+                    console.msg("\n{0} is holding {1}.".format(user["pronouns"].capitalize(),hitemlist))
                 
                 if userconsole["posture"] and userconsole["posture_item"]:
                     console.msg("\n{0} is {1} on {2}.".format(user["pronouns"].capitalize(),userconsole["posture"],
@@ -422,9 +439,13 @@ def COMMAND(console, args):
                 if user["pronouns"] == "female":
                     # Holding stuff
                     if len(user["equipment"])>0:
-                        #Currently only 1 item is supported
-                        hitem = console.database.item_by_id(user["equipment"][0])
-                        console.msg("\nShe is holding {0}.".format(COMMON.format_item(NAME, hitem["name"])))
+                        #Currently only 2 items are supported
+                        hitemlist=[]
+                        for hitem in user["equipment"]:
+                            hitem = console.database.item_by_id(hitem)
+                            hitemlist.append("{0}".format(COMMON.format_item(NAME, hitem["name"])))
+                        hitemlist=' and '.join(hitemlist)
+                        console.msg("\nShe is holding {0}.".format(hitemlist))
                     
                     if userconsole["posture"] and userconsole["posture_item"]:
                         console.msg("\nShe is {0} on {1}.".format(userconsole["posture"],
@@ -434,9 +455,13 @@ def COMMAND(console, args):
                 elif user["pronouns"] == "male":
                     # Holding stuff
                     if len(user["equipment"])>0:
-                        #Currently only 1 item is supported
-                        hitem = console.database.item_by_id(user["equipment"][0])
-                        console.msg("\nHe is holding {0}.".format(COMMON.format_item(NAME, hitem["name"])))
+                        #Currently only 2 items are supported
+                        hitemlist=[]
+                        for hitem in user["equipment"]:
+                            hitem = console.database.item_by_id(hitem)
+                            hitemlist.append("{0}".format(COMMON.format_item(NAME, hitem["name"])))
+                        hitemlist=' and '.join(hitemlist)
+                        console.msg("\nHe is holding {0}.".format(hitemlist))
                         
                     if userconsole["posture"] and userconsole["posture_item"]:
                         console.msg("\nHe is {0} on {1}.".format(userconsole["posture"],
@@ -446,9 +471,13 @@ def COMMAND(console, args):
                 elif user["pronouns"] == "neutral":
                     # Holding stuff
                     if len(user["equipment"])>0:
-                        #Currently only 1 item is supported
-                        hitem = console.database.item_by_id(user["equipment"][0])
-                        console.msg("\nThey are holding {0}.".format(COMMON.format_item(NAME, hitem["name"])))
+                        #Currently only 2 items are supported
+                        hitemlist=[]
+                        for hitem in user["equipment"]:
+                            hitem = console.database.item_by_id(hitem)
+                            hitemlist.append("{0}".format(COMMON.format_item(NAME, hitem["name"])))
+                        hitemlist=' and '.join(hitemlist)
+                        console.msg("\nThey are holding {0}.".format(hitemlist))
                     
                     if userconsole["posture"] and userconsole["posture_item"]:
                         console.msg("\nThey are {0} on {1}.".format(userconsole["posture"],
@@ -458,9 +487,13 @@ def COMMAND(console, args):
                 else:
                     # Holding stuff
                     if len(user["equipment"])>0:
-                        #Currently only 1 item is supported
-                        hitem = console.database.item_by_id(user["equipment"][0])
-                        console.msg("\n{0} is holding {1}.".format(user["pronouns"].capitalize(),COMMON.format_item(NAME, hitem["name"])))
+                        #Currently only 2 items are supported
+                        hitemlist=[]
+                        for hitem in user["equipment"]:
+                            hitem = console.database.item_by_id(hitem)
+                            hitemlist.append("{0}".format(COMMON.format_item(NAME, hitem["name"])))
+                        hitemlist=' and '.join(hitemlist)
+                        console.msg("\n{0} is holding {1}.".format(user["pronouns"].capitalize(),hitemlist))
                     
                     if userconsole["posture"] and userconsole["posture_item"]:
                         console.msg("\n{0} is {1} on {2}.".format(user["pronouns"].capitalize(),userconsole["posture"],

@@ -53,7 +53,7 @@ def COMMAND(console, args):
 
     mylang=console.database.user_by_name(console.user["name"])["lang"]
     # Search our inventory for the target item.
-    for itemid in console.user["equipment"]:
+    for itemid in console.user["inventory"]+console.user["equipment"]:
         # Lookup the target item and perform item checks.
         thisitem = COMMON.check_item(NAME, console, itemid, reason=False)
         if not thisitem:
@@ -69,7 +69,7 @@ def COMMAND(console, args):
                 emsg=thisitem["message"]
                 if mylang != thisitem["mlang"]:
                     emsg=encvigenere(thisitem["message"],thisitem["mlang"])
-                console.msg("You read '{0}' on {1}".format(emsg,COMMON.format_item(NAME, thisitem["name"])))
+                console.msg("You read \"{0}\" on {1}.".format(emsg,COMMON.format_item(NAME, thisitem["name"])))
                 console.shell.broadcast_room(console, "{0} reads something on {1}.".format(
                         console.user["nick"], COMMON.format_item(NAME, thisitem["name"])),exclude=console.user["name"])
                 return True
@@ -79,7 +79,7 @@ def COMMAND(console, args):
             # Update the user document.
 
     # We didn't find the requested item. Check for a partial match.
-    partial = COMMON.match_partial(NAME, console, target, "item", room=False, inventory=False, equipment=True)
+    partial = COMMON.match_partial(NAME, console, target, "item", room=False, inventory=True, equipment=True)
     if partial:
         return COMMAND(console, partial)
 

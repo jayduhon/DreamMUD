@@ -61,7 +61,7 @@ def COMMAND(console, args):
 
         # Check for name or id match. Also check if the user prepended "the ". Figure out how to remove it.
         if target in [thisitem["name"].lower(), "the " + thisitem["name"].lower()] or str(thisitem["id"]) == target:
-            # Only non-owners lose duplified items when removeing them.
+            # Only non-owners lose duplified items when removing them.
             if thisitem["id"] in console.user["inventory"]:
                 console.msg("{0}: You already have this item in your inventory.".format(NAME))
             else:

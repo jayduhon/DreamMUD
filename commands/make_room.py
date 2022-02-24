@@ -43,7 +43,7 @@ def COMMAND(console, args):
         return False
 
     # Allowed characters for names.
-    ALLOWED_CHARACTERS = string.ascii_letters + string.digits + '_' + ' '
+    ALLOWED_CHARACTERS = string.ascii_letters + string.digits + '-' + ' '
     # Check allowed characters.
     for char in ''.join(args):
         if char not in ALLOWED_CHARACTERS:
@@ -72,10 +72,10 @@ def COMMAND(console, args):
     allrooms = sorted(console.database.rooms.all(), reverse=True, key=lambda k: k["id"])
 
     # Make sure a room by this name does not already exist.
-    for room in allrooms:
-        if room["name"].lower() == roomname.lower():
-            console.msg("{0}: A room by this name already exists.".format(NAME))
-            return False
+    #for room in allrooms:
+    #    if room["name"].lower() == roomname.lower():
+    #        console.msg("{0}: A room by this name already exists.".format(NAME))
+    #        return False
 
     # Find the highest numbered currently existing room ID.
     if allrooms:

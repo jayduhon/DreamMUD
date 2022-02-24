@@ -49,8 +49,8 @@ def COMMAND(console, args):
         console.msg("{0}: Very funny.".format(NAME))
         return False
     
-    # Currently only one item supported.
-    if len(console.user["equipment"])>0:
+    # Currently only 2 items are supported.
+    if len(console.user["equipment"])>1:
         console.msg("Your hands are full.")
         return False
     
