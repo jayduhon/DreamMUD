@@ -139,14 +139,15 @@ def check(NAME, console, args, argc=None, argmin=None, argmax=None, online=True,
                 console.msg("{0}: You do not have permission to use this command.".format(NAME))
             return False
         
-    if spiritcost and spiritenabled and not console.user["wizard"]:
-        if console.user["spirit"]<spiritcost:
-            if reason:
-                console.msg("You are too tired for that.")
-            return False
-        else:
-            console.user["spirit"]-=spiritcost
-            console.database.upsert_user(console.user)
+    if CONFIG["spiritenabled"]:
+        if spiritcost and not console.user["wizard"]:
+            if console.user["spirit"]<spiritcost:
+                if reason:
+                    console.msg("You are too tired for that.")
+                return False
+            else:
+                console.user["spirit"]-=spiritcost
+                console.database.upsert_user(console.user)
             
     # All checks succeeded.
     return True
