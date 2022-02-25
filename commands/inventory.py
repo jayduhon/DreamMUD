@@ -26,6 +26,8 @@
 # **********
 
 from lib.litnumbers import *
+from lib.vigenere import *
+import random
 
 NAME = "inventory"
 CATEGORIES = ["items"]
@@ -43,13 +45,29 @@ def COMMAND(console, args):
     if not console.user["equipment"]:
         console.msg("You are not holding anything.")
     
+    cursedinv=False
+    for item in console.user["inventory"]+console.user["equipment"]:
+        item = COMMON.check_item(NAME, console, item, reason=False)
+        try:
+            if item["cursed"]["cursetype"]=="invmess": 
+                cursedinv=True
+                break
+        except:
+            pass
+    mylang=console.database.user_by_name(console.user["name"])["lang"]
+
     # Holding items
     if console.user["equipment"]:
         hitemlist=[]
         for hitem in console.user["equipment"]:
             hitem = console.database.item_by_id(hitem)
-            if console.user["builder"]["enabled"]: hitemlist.append("{0} (ID: {1})".format(COMMON.format_item(NAME, hitem["name"]),hitem["id"]))
-            else: hitemlist.append("{0}".format(COMMON.format_item(NAME, hitem["name"])))
+            hitemname=hitem["name"]
+            hitemid=hitem["id"]
+            if cursedinv: 
+                hitemname=encvigenere(hitemname, mylang)
+                hitemid=random.randint(1,100)
+            if console.user["builder"]["enabled"]: hitemlist.append("{0} (ID: {1})".format(COMMON.format_item(NAME, hitemname),hitemid))
+            else: hitemlist.append("{0}".format(COMMON.format_item(NAME, hitemname)))
         hitemlist=' and '.join(hitemlist)
         console.msg("You are holding {0}.".format(hitemlist))
 
@@ -71,8 +89,12 @@ def COMMAND(console, args):
             continue
 
         # Show the item's name and ID.
-        if console.user["builder"]["enabled"]: console.msg("{0} (ID: {1})".format(thisitem["name"], itemid))
-        else: console.msg("{0}".format(thisitem["name"]))
+        hitemname=thisitem["name"]
+        if cursedinv: 
+            hitemname=encvigenere(hitemname, mylang)
+            itemid=random.randint(1,100)
+        if console.user["builder"]["enabled"]: console.msg("{0} (ID: {1})".format(hitemname, itemid))
+        else: console.msg("{0}".format(hitemname))
 
         # Keep count.
         itemcount += 1

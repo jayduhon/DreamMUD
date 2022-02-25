@@ -25,6 +25,8 @@
 # IN THE SOFTWARE.
 # **********
 
+import random
+
 NAME = "alter item"
 CATEGORIES = ["items"]
 USAGE = "alter item <item_id> <item_type>"
@@ -75,8 +77,18 @@ def COMMAND(console, args):
     elif args[1]=="cursed":
         if thisitem["cursed"]["enabled"]:
            thisitem["cursed"]["enabled"] = False
+           console.msg("{0} is not cursed from now.".format(thisitem["name"]))
         else:    
+            # Curses are random at the moment.
+            # Spirit gain deny
+            # Random direction when walking
+            # Messing up inventory item names
+            # Nightmare - spirit gain deny when asleep
+            curses=["spirit","randomwalk","invmess","nightmare"]
             thisitem["cursed"]["enabled"] = True
+            thisitem["cursed"]["cursetype"] = random.choice(curses)
+            console.msg("{0} is now cursed with: {1}".format(thisitem["name"],thisitem["cursed"]["cursetype"]))
+
     elif args[1]=="container":
         if "into" in thisitem["name"] or "from" in thisitem["name"]:
             console.msg("Containers can't have the word INTO or FROM in their name. Please rename the item before making it a container.")

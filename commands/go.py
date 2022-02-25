@@ -83,6 +83,17 @@ def COMMAND(console, args):
         console.msg("{0}: Very funny.".format(NAME))
         return False
 
+    for item in console.user["inventory"]:
+        item = COMMON.check_item(NAME, console, item, reason=False)
+        try:
+            if item["cursed"]["cursetype"]=="randomwalk":
+                rnames=[]
+                for ex in range(len(thisroom["exits"])): rnames.append(thisroom["exits"][ex]["name"])
+                target=random.choice(rnames)
+                break
+        except:
+            pass
+
     # Iterate through all of the exits in the room, searching for the one that was asked for.
     exits = thisroom["exits"]
     for ex in range(len(exits)):
