@@ -34,6 +34,7 @@ import random
 
 from lib.logger import Logger
 from lib.color import *
+from lib.dreamgen import *
 import unicodedata as ud
 
 import builtins
@@ -490,7 +491,7 @@ class Shell:
                     # Only gain spirit if we are not cursed.
                     if nightm == True:
                         if self.router.users[u]["console"]["posture"]=="sleeping": 
-                            self.router.users[u]["console"].msg("You hear a horrible scream in the back of your mind.")
+                            self.router.users[u]["console"].msg(nightmgen())
                         else: 
                             self.router.users[u]["console"].user["spirit"]+=CONFIG["spiritrate"]
                             self.router.users[u]["console"].msg("You regain some spirit.")
