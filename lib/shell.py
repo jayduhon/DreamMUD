@@ -467,12 +467,18 @@ class Shell:
                 if self.router.users[u]["console"].user["spirit"]<100:
                     # Bool if they are cursed or not by an item.
                     cursed = False
+                    nightm = False
                     # Bool if they are asleep and an item will move them.
                     ported= False
                     # Iterate through inventory to see if they are cursed.
                     for it in self.router.users[u]["console"].user["inventory"]+self.router.users[u]["console"].user["equipment"]:
                         it2 = self.router.users[u]["console"].database.item_by_id(it)
-                        if it2["cursed"]["enabled"]: cursed = True
+                        if it2["cursed"]["enabled"]:
+                            try:
+                                if it2["cursed"]["cursetype"]=="spirit": cursed = True
+                                elif it2["cursed"]["cursetype"]=="nightmare": nightm = True
+                            except:
+                                pass
                         if CONFIG["telekey_sport"]>0 and it2["telekey"]!=self.router.users[u]["console"].user["room"]:
                             if it2["telekey"] and self.router.users[u]["console"]["posture"]=="sleeping" and ported==False:
                                 # Do a random roll and see if we will move.
@@ -482,7 +488,13 @@ class Shell:
                                     ported=True
                             #if it2["whirlpool"]["enabled"]: willport = True
                     # Only gain spirit if we are not cursed.
-                    if cursed == False:
+                    if nightm == True:
+                        if self.router.users[u]["console"]["posture"]=="sleeping": 
+                            self.router.users[u]["console"].msg("You hear a horrible scream in the back of your mind.")
+                        else: 
+                            self.router.users[u]["console"].user["spirit"]+=CONFIG["spiritrate"]
+                            self.router.users[u]["console"].msg("You regain some spirit.")
+                    elif cursed == False:
                         self.router.users[u]["console"].user["spirit"]+=CONFIG["spiritrate"]
                         if self.router.users[u]["console"]["posture"]!="sleeping": self.router.users[u]["console"].msg("You regain some spirit.")
                     else:
