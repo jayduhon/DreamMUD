@@ -34,11 +34,17 @@
     "hidden": false,
     "truehide": false,
     "cursed": {
-      "enabled": false      
+      "enabled": false,
+      "cursetype": ""
     },
     "chance": 1,
+    "radio": {
+      "enabled": false,
+      "frequency": 0
+    },
     "container": {
-      "enabled": false      
+      "enabled": false,
+      "inventory": []
     }
   },
   "rooms": {
