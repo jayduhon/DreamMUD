@@ -146,7 +146,7 @@ def check(NAME, console, args, argc=None, argmin=None, argmax=None, online=True,
                     console.msg("You are too tired for that.")
                 return False
             else:
-                console.user["spirit"]-=spiritcost
+                console.user["spirit"]=console.user["spirit"]-spiritcost
                 console.database.upsert_user(console.user)
             
     # All checks succeeded.

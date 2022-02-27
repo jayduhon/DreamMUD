@@ -380,6 +380,35 @@ class Shell:
                 return True
         return False
 
+    def radiocast(self, message, radiofreq, exclude=None, excludelist=None, mtype=None, enmsg=None, tlang=None):
+        # Iterate through users and see if they have a radio with same freq.
+        print(radiofreq)
+        for u in self.router.users:
+            if self.router.users[u]["console"].user:
+                for potradio in self.router.users[u]["console"].user["inventory"]+self.router.users[u]["console"].user["equipment"]:
+                    potradio=COMMON.check_item("radiocast", self.router.users[u]["console"], potradio)
+                    # print(potradio["name"])
+                    if potradio["radio"]["enabled"] and potradio["radio"]["frequency"]==int(radiofreq):
+                        # print("Found a radio to broadcast to: "+message)
+                        fmessage="{0} broadcasts: \"{1}\"".format(potradio["name"],message)
+                        fenmsg="{0} broadcasts: \"{1}\"".format(potradio["name"],enmsg)
+                        self.broadcast_room(self.router.users[u]["console"], fmessage, exclude, excludelist, mtype, fenmsg, tlang)
+        # Iterate through rooms if they have an item dropped with same freq.
+        for room in self._database.rooms.all():
+            for itemid in room["items"]:
+                iitem=COMMON.check_item("radiocast", self.router.users[u]["console"], itemid)
+                if iitem:
+                    if iitem["radio"]["enabled"] and iitem["radio"]["frequency"]==int(radiofreq):
+                        # print("Found a radio in a room to broadcast to: "+message)
+                        fmessage="{0} broadcasts: \"{1}\"".format(iitem["name"],message)
+                        fenmsg="{0} broadcasts: \"{1}\"".format(iitem["name"],enmsg)
+                        if len(room["users"])>0:
+                            talkto=self.console_by_username(room["users"][0])
+                            self.broadcast_room(talkto, fmessage, exclude, excludelist, mtype, fenmsg, tlang)
+                else:
+                    pass
+        return True
+
     def broadcast(self, message, exclude=None, mtype=None):
         """Broadcast Message
 
