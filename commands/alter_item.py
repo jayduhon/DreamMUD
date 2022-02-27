@@ -37,6 +37,7 @@ Currently supported item types are:
 - book
 - container
 - cursed
+- radio
 
 If the item type is not default then it's a special item like a book 
 for learning languages. They don't necessarily need to look and used like a book.
@@ -50,7 +51,7 @@ def COMMAND(console, args):
     # Perform initial checks.
     if not COMMON.check(NAME, console, args, argmin=2):
         return False
-    types=["simple", "book", "container", "cursed"]
+    types=["simple", "book", "container", "cursed", "radio"]
     # Perform argument type checks and casts.
     itemid = COMMON.check_argtypes(NAME, console, args, checks=[[0, int]], retargs=0)
     if itemid is None:
@@ -66,12 +67,31 @@ def COMMAND(console, args):
         console.msg("Not a valid item type. Currently items can be one of these: {0}".format(', '.join(types)))
         return False
     if args[1]=="simple":
+        # Turning it into a simple item.
+        # Turn off being a language book.
         thisitem["lang"] = None
+        # Turn off curses.
         thisitem["cursed"]["enabled"] = False
+        thisitem["cursed"]["cursetype"] = ""
+        # Turn off radio vars.
+        thisitem["radio"]["enabled"] = False
+        thisitem["radio"]["frequency"] = 0
+        # If its empty, turn off being a container.
         if(len(thisitem["container"]["inventory"]))>0:
             console.msg("Can't make it a non-container, please empty the item first.")
             return False
         else: thisitem["container"]["enabled"] = False
+
+    elif args[1]=="radio":
+        # Turn it into a radio or disable being one if it was already a radio.
+        if thisitem["radio"]["enabled"]:
+           thisitem["radio"]["enabled"] = False
+           console.msg("{0} is not a radio from now.".format(thisitem["name"]))
+        else:    
+            thisitem["radio"]["enabled"] = True
+            thisitem["radio"]["frequency"] = 0
+            console.msg("{0} is now a radio".format(thisitem["name"]))
+
     elif args[1]=="book":
         thisitem["lang"] = console.user["lang"]
     elif args[1]=="cursed":

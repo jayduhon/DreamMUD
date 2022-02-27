@@ -101,8 +101,13 @@ def COMMAND(console, args):
             "enabled": False,
             "inventory": []
         },
+        "radio": {
+            "enabled": False,
+            "frequency": 0
+        },
         "cursed": {
-            "enabled": False
+            "enabled": False,
+            "cursetype": ""
         },
         "telekey": None
     }
