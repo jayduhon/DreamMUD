@@ -23,7 +23,7 @@ Current changes to mainline DennisMUD
 - Recover phrases instead of 6 digit recovery numbers,
 - Spirit system (certain commands cost spirit if enabled in server config),
 - Sleeping (on items or ground),
-- Rituals to perform,
+- Rituals to perform (telepathy, identify, reveal, seer, ghost, cleanse, whirlpool),
 - Cursed items,
 - Command history and command shortcuts on the websocket client,
 - Radio items that can be used to broadcast to tuned frequencies.
