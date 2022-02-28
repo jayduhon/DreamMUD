@@ -44,7 +44,7 @@ def COMMAND(console, args):
         return False
 
     # Make sure we are not already logged in.
-    if console.user or console.database.online(args[0]):
+    if console.user:
         console.msg("{0}: You are already logged in.".format(NAME))
         return False
 
@@ -54,12 +54,13 @@ def COMMAND(console, args):
         return False
 
     # Attempt to authenticate with the database.
-    thisuser = console.database.login_user(args[0].lower(), hashlib.sha256(args[1].encode()).hexdigest())
+    thisuser = console.database.login_user(args[0].lower(), hashlib.sha256(args[1].encode()).hexdigest(), console)
     if not thisuser:
         console.msg("{0}: Incorrect username or password.".format(NAME))
         console._login_delay = True
         console.router._reactor.callLater(1, console._reset_login_delay)
         return False  # Bad login.
+    
     console.user = thisuser
     if console.router.websocket_factory:
         console.user["colors"]["service"]="websocket"
