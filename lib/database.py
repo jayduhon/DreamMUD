@@ -339,7 +339,7 @@ class DatabaseManager:
                 return user
         return None
 
-    def login_user(self, username, passhash):
+    def login_user(self, username, passhash, console):
         """Check if a username and password match an existing user, and log them in.
 
         The Database Manager keeps track of which users are online.
@@ -363,7 +363,12 @@ class DatabaseManager:
         # Attempt to log in a user who is already logged in.
         if username in self._users_online:
             self._log.warn("User logged in twice: {username}", username=username)
-            return None
+            console.msg("Throwing out old connection.")
+            console=console.shell.console_by_username(username)
+            console.shell.command(console, "logout")
+            #self.logout_user(username)
+            self._users_online.append(username)
+            return thisuser
 
         # Clean and successful login.
         else:
