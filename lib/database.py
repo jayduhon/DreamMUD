@@ -366,6 +366,7 @@ class DatabaseManager:
             console.msg("Throwing out old connection.")
             console=console.shell.console_by_username(username)
             console.shell.command(console, "logout")
+            console.user=None
             #self.logout_user(username)
             self._users_online.append(username)
             return thisuser
