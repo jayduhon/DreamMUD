@@ -22,6 +22,7 @@ Current changes to mainline DennisMUD
 - Sleeping (on items or ground),
 - Rituals to perform,
 - Cursed items,
+- Command history and command shortcuts on the websocket client,
 - Radio items that can be used to broadcast to tuned frequencies.
 
 Defaults Configuration
