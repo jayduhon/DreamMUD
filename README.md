@@ -6,6 +6,22 @@ A public test instance is generally kept running. Access it with the web client 
 
 This fork's public test instance can be accessed at http://mud.molylepke.hu or via telnet at mud.molylepke.hu on port 37381.
 
+
+Current changes to mainline DennisMUD
+================================
+- Xterm colors over telnet,
+- MSSP support,
+- Optional builder flag for stripping ID and ownership data,
+- Randomize exit/item commands,
+- Languages,
+- Containers,
+- Timeflow,
+- Spirit system (certain commands cost spirit if enabled in server config),
+- Sleeping (on items or ground),
+- Rituals to perform,
+- Cursed items,
+- Radio items that can be used to broadcast to tuned frequencies.
+
 Defaults Configuration
 ======================
 
