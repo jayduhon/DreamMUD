@@ -15,6 +15,8 @@ Current changes to mainline DennisMUD
 - Randomize exit/item commands,
 - Languages,
 - Containers,
+- Custom pronouns system,
+- Hidden items,
 - Timeflow,
 - Spirit system (certain commands cost spirit if enabled in server config),
 - Sleeping (on items or ground),
