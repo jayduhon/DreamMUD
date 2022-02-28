@@ -35,7 +35,7 @@ SCOST=0
 USAGE = "perform <ritual> <optional ...>"
 DESCRIPTION = """Perform the ritual called <ritual>. 
 
-Current rituals: telepathy, identify, reveal, seer, ghost, cleanse.
+Current rituals: telepathy, identify, reveal, seer, ghost, cleanse, whirlpool.
 
 TELEPATHY can send someone an anonymous message.
 IDENTIFY can show you additional information about an object.
@@ -43,7 +43,7 @@ REVEAL can reveal hidden things in a room.
 SEER can show you information about the location of someone.
 GHOST can hide you almost completely for continual spirit cost.
 CLEANSE can cleanse someone and the cursed items they have.
-WHIRLPOOL can teleport an asleep player to a random room.
+WHIRLPOOL can teleport a sleeping player to a random room.
 
 Ex. `perform telepathy seisatsu Hello there!`
 Ex1. `perform reveal`"""
@@ -54,17 +54,12 @@ def COMMAND(console, args):
     if not COMMON.check(NAME, console, args, argmin=1, awake=True):
         return False
 
-    #elif args[0]=="force":
-    #    console.msg("Not implemented yet.")
-    #    return False
-    #print(args)
+    # WHIRLPOOL can teleport a sleeping player to a random room.
     if args[0]=="whirlpool":
         SCOST=5
         if not COMMON.check(NAME, console, args, argmin=2, spiritcost=SCOST, awake=True):
             return False
-        # Make sure the named user exists, is online, and is in the same room as us.
         thisreceiver=' '.join(args[1:])
-        #print(thisreceiver)
         targetuser = COMMON.check_user(NAME, console, thisreceiver, room=True, online=True, live=True, reason=False,
                                    wizardskip=["room", "online"])
         if not targetuser:
@@ -76,16 +71,15 @@ def COMMAND(console, args):
             console.msg("{0}: No such user in this room.".format(NAME))
             return False
 
-        # Found the user, wake them up!
+        # Found the user, let's teleport them away.
         userconsole = console.shell.console_by_username(targetuser["name"])
         if not userconsole:
             return False
         elif userconsole["posture"]=="sleeping":
             console.shell.broadcast_room(console,"{0} whispers some words in the ears of {1}.".format(console.user["nick"],targetuser["nick"]))
             destroom=random.choice(console.database.rooms.all())
-            #destroom = COMMON.check_room(NAME, console, roomsc)
             thisroom = COMMON.check_room(NAME, console, console.user["room"])
-            # The telekey is paired to a nonexistent room. Report and ignore it.
+            # Somehow we got a nonexistent room. Log and report it.
             if not destroom:
                 console.msg("{0}: ERROR: Tried to teleport a sleeper into a nonexistent room!".format(NAME))
                 console.log.error("Tried to teleport a sleeper into a nonexistent room!")
@@ -119,9 +113,6 @@ def COMMAND(console, args):
                 userconsole.exits = []
                 for exi in range(len(destroom["exits"])):
                     userconsole.exits.append(destroom["exits"][exi]["name"])
-
-                # Take a look around.
-                # console.shell.command(console, "look", False)
         else:
             if userconsole.user["pronouns"]=="male":
                 console.msg("He is not asleep.")
@@ -131,11 +122,14 @@ def COMMAND(console, args):
                 console.msg("They are not asleep.")
             else: console.msg("{0} is not asleep.".format(userconsole.user["pronouns"].capitalize()))
             return False
+    
+    # CLEANSE can cleanse someone and the cursed items they have.
     elif args[0]=="cleanse":
         SCOST=5
+        # Should we be able to cleanse ourselves?
         #if thisreceiver==console.user["name"] or thisreceiver==console.user["nick"] or thisreceiver==console.user["nick"].lower():
         #    console.msg("Can't cleanse yourself.")
-        #    return False        
+        #    return False
         if not COMMON.check(NAME, console, args, argmin=2, spiritcost=SCOST, awake=True):
             return False
 
@@ -181,8 +175,8 @@ def COMMAND(console, args):
                     console.msg("You cleansed some of your items.")
         return True
 
+    # SEER can show you information about the location of someone.
     elif args[0]=="seer":
-        # Spirit cost of telepathy.
         SCOST=5
         if not COMMON.check(NAME, console, args, argmin=2, spiritcost=SCOST):
             return False
@@ -202,26 +196,29 @@ def COMMAND(console, args):
         targetroom = COMMON.check_room(NAME, console, roomid=targetuser["room"])
         msg = "{0} looks into the distance for a moment.".format(console.user["nick"])
         console.shell.broadcast_room(console, msg)
-        #console.msg("You see a vision... \n{0}\n{1}".format(targetroom["name"], targetroom["desc"]))
         console.msg("You see a vision... \n{0}\nThe vision ends...".format(targetroom["desc"]))
         return True
     
+    # GHOST can hide you almost completely for continual spirit cost.
     elif args[0]=="ghost":
         SCOST=50
         if not COMMON.check(NAME, console, args, argmax=1, spiritcost=SCOST):
             return False
+        # We are ghosts already, lets appear.
         if console.user["ghost"]:
             console.user["spirit"]+=50
             msg = "{0} suddenly appears.".format(console.user["nick"])
             console.shell.broadcast_room(console, msg)
             console.user["ghost"]=False
+        # We arent ghosts, lets disappear.
         else:
             msg = "{0} mutters a few words and disappears.".format(console.user["nick"])
             console.shell.broadcast_room(console, msg)
             console.user["ghost"]=True
         console.database.upsert_user(console.user)
         return True
-        
+    
+    # REVEAL can reveal hidden things in a room.
     elif args[0]=="reveal":
         SCOST=5
         if not COMMON.check(NAME, console, args, argmax=1, spiritcost=SCOST):
@@ -245,10 +242,9 @@ def COMMAND(console, args):
                 if dit["truehide"]==True:
                     console.msg("You sense {0} being hidden around here.".format(COMMON.format_item(NAME, dit["name"])))
                 elif random.randint(1,dit["chance"])==1: 
-                    #dit["truehide"]=False
                     dit["hidden"]=False
-                # A small chance to reveal truly hidden stuff.
-                    
+        
+        # Should we be able to reveal ghosts?            
         #for uss in destroom["users"]:
         #    duss = console.database.user_by_name(uss)
         #    if duss["ghost"]:
@@ -257,9 +253,9 @@ def COMMAND(console, args):
         #            console.shell.msg_user(duss["name"],"Someone revealed you.")            
         return True
 
+    # IDENTIFY can show you additional information about an object.
     elif args[0]=="identify":
-        # Spirit cost of identify.
-        SCOST=2
+        SCOST=5
         found_something = False
         partials = []
         target=' '.join(args[1:])
@@ -312,10 +308,6 @@ def COMMAND(console, args):
                 else:
                     console.msg("You sense the {0}.".format(item["name"]))
                 console.msg("It seems to be connected to {0}.".format(', '.join(item["owners"])))
-
-                # Description exists, so show it.
-                #if item["desc"]:
-                #    console.msg(item["desc"])
 
                 # List content if it's a container
                 if item["container"]["enabled"]:
@@ -414,8 +406,8 @@ def COMMAND(console, args):
                 console.msg("{0}: No such thing: {1}".format(NAME, ' '.join(args[1:])))
             return False
         
+    # TELEPATHY can send someone an anonymous message.
     elif args[0]=="telepathy":
-        # Spirit cost of telepathy.
         SCOST=5
         if not COMMON.check(NAME, console, args, argmin=3, spiritcost=SCOST):
             return False
@@ -432,6 +424,8 @@ def COMMAND(console, args):
         msg = "{0} focuses for a moment to perform a ritual.".format(console.user["nick"])
         console.shell.broadcast_room(console, msg)
         return True
+    
+    # Unknown ritual name.
     else:
         console.msg("You never heard of such a ritual.")
         return False

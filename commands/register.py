@@ -96,6 +96,9 @@ def COMMAND(console, args):
         "cecho": {
             "enabled": console.database.defaults["users"]["cecho"]["enabled"]
         },
+        "keepalive": {
+            "enabled": console.database.defaults["users"]["keepalive"]["enabled"]
+        },
         "colors": {
             "enabled": console.database.defaults["users"]["colors"]["enabled"]
         },
