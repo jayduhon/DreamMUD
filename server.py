@@ -382,7 +382,7 @@ def main():
         log.info("Time is passing.")
         command_shell.updatespirit()
         for u in router.users:
-            if router.users[u]["console"].user["keepalive"]:
+            if router.users[u]["console"].user["keepalive"]["enabled"]:
                 if router.message(u, "*keepalive*")==False:
                     print("Logging {0} off.".format(router.users[u]["console"].user["name"]))
                     command_shell.transport.loseConnection()
