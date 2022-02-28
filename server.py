@@ -160,12 +160,17 @@ class Router:
         :return: True
         """
         if self.users[peer]["service"] == "telnet":
-            self.telnet_factory.communicate(peer, msg.encode())
+            try:
+                self.telnet_factory.communicate(peer, msg.encode())
+            except:
+                print("Tried to send message to a closed telnet client.")
+                return False
         if self.users[peer]["service"] == "websocket":
             try:
                 self.websocket_factory.communicate(peer, html.escape(msg).encode("utf-8"), _nbsp)
             except:
                 print("Tried to send message to a closed websocket client.")
+                return False
 
     def broadcast_all(self, msg, exclude=None, mtype=None):
         """Broadcast All
@@ -344,22 +349,6 @@ def main():
         return 3
     log.info("Finished initializing database manager.")
 
-    # Initialize the Database Manager and load the dream database.
-    #log.info("Initializing random dreams...")
-    # Cleaning up. First [] stuff.
-    #pattern= r'\[[^]]*\]'
-    # Then digits.
-    #pattern2=r'\d+'
-    #with open('dennis.server.log', 'r') as file:
-    #    msg = file.read().replace('\n', '')
-    #mod_msg = re.sub(pattern, '', msg )
-    #mod_msg = re.sub(pattern2, '', mod_msg )
-    #mod_msg = ''.join(ch for ch in mod_msg if ch.isalpha() or ch==' ')
-    #model=build_model(mod_msg, 20)
-    #mod_msg=generate_text(model, 20, 20)
-    #config["randomdreams"]["filename"]
-    #log.info("Finished initializing random dreams.")
-
     # Initialize the router.
     router = Router(config, dbman)
 
@@ -392,8 +381,11 @@ def main():
         #command_shell.broadcast("Time is passing.")
         log.info("Time is passing.")
         command_shell.updatespirit()
-        #for u in router.users:
-        #    print("Time is passing for {0} too.".format(router.users[u]["console"].user["name"]))
+        for u in router.users:
+            if router.users[u]["console"].user["keepalive"]:
+                if router.message(u, "*keepalive*")==False:
+                    print("Logging {0} off.".format(router.users[u]["console"].user["name"]))
+                    command_shell.transport.loseConnection()
 
     l = task.LoopingCall(timeflow)
     l.start(config["timegap"]) # call when specified in seconds
