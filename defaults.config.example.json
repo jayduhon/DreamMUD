@@ -19,6 +19,9 @@
     "builder": {
       "enabled": true
     },
+    "keepalive": {
+      "enabled": false
+    },
     "cecho": {
       "enabled": true
     },
