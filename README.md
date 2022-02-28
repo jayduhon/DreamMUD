@@ -20,6 +20,7 @@ Current changes to mainline DennisMUD
 - Separate equipment list (items can be held),
 - Writing on items that can be read after,
 - Timeflow,
+- Recover phrases instead of 6 digit recovery numbers,
 - Spirit system (certain commands cost spirit if enabled in server config),
 - Sleeping (on items or ground),
 - Rituals to perform,
