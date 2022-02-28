@@ -17,6 +17,7 @@ Current changes to mainline DennisMUD
 - Containers,
 - Custom pronouns system,
 - Hidden items,
+- Separate equipment list (items can be held),
 - Timeflow,
 - Spirit system (certain commands cost spirit if enabled in server config),
 - Sleeping (on items or ground),
