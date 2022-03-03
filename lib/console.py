@@ -125,6 +125,20 @@ class Console:
         self.router.message(self.rname, message, _nbsp)
         return True
 
+    def ircmsg(self, message):
+        """Send Message
+
+        Send a message to the user connected to this console.
+
+        :param message: The message to send.
+        :param _nbsp: Will insert non-breakable spaces for formatting on the websocket frontend.
+
+        :return: True
+        """
+        self.router.irc.pubmsg(message)
+        return True
+
+
     def _reset_login_delay(self):
         """Set self._login_delay to False.
         """

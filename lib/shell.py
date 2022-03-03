@@ -382,6 +382,7 @@ class Shell:
 
     def radiocast(self, message, radiofreq, exclude=None, excludelist=None, mtype=None, enmsg=None, tlang=None):
         # Iterate through users and see if they have a radio with same freq.
+        # Message could depend on where the radio is.
         print(radiofreq)
         for u in self.router.users:
             if self.router.users[u]["console"].user:
