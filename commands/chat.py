@@ -55,6 +55,9 @@ def COMMAND(console, args):
         if console.router.users[u]["console"].user and console.router.users[u]["console"].user["chat"]["enabled"]:
             if not console.user["name"] in console.router.users[u]["console"].user["chat"]["ignored"]:
                 console.router.users[u]["console"].msg(mcolor(CBMAG,"(Chat) " + console.user["name"] + ": " + ' '.join(args),console.router.users[u]["console"].user["colors"]))
-
+    
+    if CONFIG["ircgateway"]["enabled"]:
+        ircmsg="(Chat) " + console.user["name"] + ": " + ' '.join(args)
+        console.router.f.p.say(CONFIG["ircgateway"]["channel"],ircmsg)
     # Finished.
     return True
