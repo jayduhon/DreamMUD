@@ -26,7 +26,8 @@ Current changes to mainline DennisMUD
 - Rituals to perform (telepathy, identify, reveal, seer, ghost, cleanse, whirlpool),
 - Cursed items,
 - Command history and command shortcuts on the websocket client,
-- Radio items that can be used to broadcast to tuned frequencies.
+- Radio items that can be used to broadcast to tuned frequencies,
+- Optional IRC gateway that relays the chat command back and forth.
 
 Defaults Configuration
 ======================
