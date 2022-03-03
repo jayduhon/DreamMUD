@@ -45,6 +45,7 @@ from lib import websocket
 from lib.markov import *
 from lib.config import VERSION
 from lib.color import *
+from lib.ircgateway import *
 
 import builtins
 import html
@@ -53,9 +54,11 @@ import shutil
 import signal
 import traceback
 import time
+#import requests
 
 from datetime import datetime
-from twisted.internet import reactor, ssl, task
+#from twisted.words.protocols import irc
+from twisted.internet import reactor, ssl, task, protocol
 from OpenSSL import crypto as openssl
 
 
@@ -192,9 +195,9 @@ class Router:
                 continue
             if self.users[u]["service"] == "telnet":
                 if mtype=="announce": acolo = CBWHITE
+                if mtype=="chat": acolo = CBMAG
                 self.telnet_factory.communicate(self.users[u]["console"].rname, mcolor(acolo,msg,ucolo=self.users[u]["console"].user["colors"]).encode())
             if self.users[u]["service"] == "websocket":
-                if mtype=="announce": acolo = CBWHITE
                 try: 
                     self.websocket_factory.communicate(self.users[u]["console"].rname, html.escape(mcolor(acolo,msg,ucolo=self.users[u]["console"].user["colors"])).encode("utf-8"))
                 except:
@@ -253,6 +256,10 @@ def init_services(config, router, log):
     # We will exit if no services are enabled.
     any_enabled = False
 
+    # IRC gateway
+    if config["ircgateway"]["enabled"]:
+        router.f = LogBotFactory(config["ircgateway"]["channel"])
+        reactor.connectTCP(config["ircgateway"]["server"], config["ircgateway"]["port"], router.f)
     # If telnet is enabled, initialize its service.
     if config["telnet"]["enabled"]:
         telnet_factory = telnet.ServerFactory(router)
@@ -398,7 +405,12 @@ def main():
     
     # Start the Twisted Reactor.
     log.info("Finished startup tasks.")
+    #router.f = LogBotFactory("##testingstuff")
+    #router.f.protocol=router.f.buildProtocol("irc.libera.chat")
+    # connect factory to this host and port
+    
     router._reactor = reactor
+    if config["ircgateway"]["enabled"]: router.f.cmdshell=router.shell
     reactor.run()
 
     # Shutting down.

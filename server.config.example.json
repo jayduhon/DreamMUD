@@ -8,6 +8,12 @@
     "file": "dennis.server.log",
     "level": "debug"
   },
+  "ircgateway": {
+    "enabled": true,
+    "server": "irc.libera.chat",
+    "channel": "##molylepkemud",
+    "port": 6667
+  },
   "telnet": {
     "enabled": true,
     "port": 37381
