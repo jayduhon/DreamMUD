@@ -69,6 +69,10 @@
     "cecho": {
       "enabled": false
     },
+    
+    "keepalive": {
+      "enabled": false
+    },
     "colors": {
       "enabled": false
     },
