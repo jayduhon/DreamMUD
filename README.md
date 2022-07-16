@@ -2,8 +2,6 @@
 
 Molylepke MUD is a DennisMUD fork that was mainly modeled after ifmud's capabilities. Here with this fork I focus on the multiplayer aspect, abandoning the single-player branch and implementing modern mud protocols like MSSP.
 
-This fork's public test instance can be accessed at http://mud.molylepke.hu or via telnet at mud.molylepke.hu on port 37381.
-
 
 Current changes to mainline DennisMUD
 ================================
