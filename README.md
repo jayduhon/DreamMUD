@@ -1,6 +1,8 @@
-# molylepke MUD - Multiplayer Text Adventure Sandbox
+# DreamMUD - Multiplayer Text Adventure Sandbox
 
-Molylepke MUD is a DennisMUD fork that was mainly modeled after ifmud's capabilities. Here with this fork I focus on the multiplayer aspect, abandoning the single-player branch and implementing modern mud protocols like MSSP.
+DreamMUD is a fork of molylepkeMUD which is a fork of DennisMUD.
+
+molylepkeMUD was mainly modeled after ifmud's capabilities. Here with this fork I focus on the multiplayer aspect, abandoning the single-player branch and implementing modern mud protocols like MSSP.
 
 
 Current changes to mainline DennisMUD
